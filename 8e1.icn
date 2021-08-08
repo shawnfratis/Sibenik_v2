@@ -1,0 +1,148 @@
+#fg3d 2020 FratisGraphics
+
+#Program to utilize Unicons 3D capabilities.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+#BELOW IS ALL STUFF FOR POSSIBLE FUTURE USE - PRESENTLY UNUSED
+
+#################################################
+
+link lists
+link printf
+link strings
+
+procedure main81x(aa)
+
+out := open("input.txt","w")
+	every l := !aa do {
+		write(out,l)
+}
+return()
+end
+
+#############################################
+
+procedure main8()
+removelines8("input.txt")
+end
+ 
+procedure removelines8(fn)
+
+   f := open(fn,"r") | read(f)                  
+   every put(F := [],|read(f))
+
+hstck := F
+
+every ndle := !["%"] do {                                         
+ 
+   if i := lindex(hstck,ndle) then {                                           
+      write("item =",ndle, " is at position ",i," in list.")                
+           }
+         }
+    main28(i)
+   end
+
+procedure last(p,arglist)               
+local i
+every i := p!arglist
+return \i
+end  
+
+procedure lindex(lst, x)		
+   local i
+    every i := 1 to *lst do
+      if lst[i] === x then suspend i
+ 
+end 
+
+#########################################################
+
+procedure main28(i) 
+   removelines228("input.txt",1,i) | stop("Failed to remove lines.")
+   main38()
+end
+ 
+procedure removelines228(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   out := open("output.txt","w") | stop("Unable to open ",out)
+
+   every put(F := [],|read(f))               
+   close(f)
+ 
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+ 
+   f := open(fn,"rw") | fail                  
+   every write(\!F)
+   every write(out,\!F)             
+   close(out)
+   return 
+  end
+
+#########################################################
+
+  procedure main38() 
+   removelines338("input.txt",0,0) | stop("Failed to remove lines.")
+   return
+end
+ 
+procedure removelines338(fn,start,skip)
+ 
+   f := open(fn,"r") | fail                  
+   every put(F := [],|read(f))               
+   
+   if *F < start-1+skip then fail
+   every F[start - 1 + (1 to skip)] := &null 
+    
+   ff := open(fn,"w") | fail                  
+   every write(\!F)                         
+        
+#out1 := open("input.txt","w")
+
+D001 := pretrim(F[1])
+D002 := pretrim(F[2])
+D003 := pretrim(F[3])
+D004 := pretrim(F[4])
+D005 := pretrim(F[5])
+
+D006 := pretrim(F[6])
+D007 := pretrim(F[7])
+D008 := pretrim(F[8])
+D009 := pretrim(F[9])
+D010 := pretrim(F[10])
+
+#L := []#g
+
+#put(L,ea)#g
+
+#c := L[1]#g
+
+eval(D001|0)#g
+eval(D002|0)#g
+eval(D003|0)#g
+eval(D004|0)#g
+eval(D005|0)#g
+
+eval(D006|0)#g
+eval(D007|0)#g
+eval(D008|0)#g
+eval(D009|0)#g
+eval(D010|0)#g
+
+return
+
+end
+
+##################################
+###################################
+################################
+
+    

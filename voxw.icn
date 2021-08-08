@@ -1,0 +1,5832 @@
+
+#fg3d 2020 FratisGraphics
+
+#Program to utilize Unicons 3D capabilities.
+
+#Some of this code is from the University of Arizona and Rosetta Code. Please contact me if you would like specifics of this.
+#shawnfratis@gmail.com
+
+#Integrated with Jafar Al-Gharaibeh's Unicon 3D viewer.
+
+#Made in Unicon, with Unicon IDE
+#unicon.sourceforge.net
+
+#MAIN GRAPHIC FUNCTIONS
+
+########################################################
+
+link wopen
+link color
+link graphics
+link numbers
+link options
+link button 
+link strings
+link colrlist
+link interact
+link random
+link printf
+link io
+link lists
+
+#link glib
+
+link eval
+link lists
+link str2toks
+link ivalue
+
+#########################################################
+
+#VOXW01 TEXT BOX ENTRIES#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+procedure entry3(ea)
+
+L := []#g
+
+put(L,ea)#g
+
+c := L[1]#g
+
+eval(c)#g
+
+writes(c)
+
+#WAttrib("cursor=on")#???????
+
+#system((c) >output.txt)
+out := open("output.txt","at")
+write(out,c)
+
+end
+###################################
+
+procedure entry3off(args)
+   local expr, opts, limit
+
+   opts := options(args, "l+")
+   limit := \opts["l"] | 2 ^ 30
+
+   while expr := read() do
+      every write(eval(expr)) \ limit
+
+end
+
+###################################
+
+procedure mainent() #LIST IN
+f := open("input.txt","rw") | stop("cannot open file ",fn)
+while line := read(f) 
+return f
+
+write(f)
+end
+
+#EXPORT FILE HERE? LIST OUT
+
+#VOXW02 VAR FUNCTIONS#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+procedure makevar(a)
+
+a := [1,2,3]
+
+#a := 1
+#b := 2
+#c := 3
+
+return(a)
+
+end
+
+####################################################
+
+procedure colorTable(cq)
+
+ct := ["red","green","blue","yellow","orange","magenta","gray","light gray","dark gray"]
+
+c := ct[cq]
+
+return(c)
+
+end
+
+####################################################
+
+procedure tdref()
+
+WOpen("image=rgrid.png")
+
+end
+
+##################################################
+
+procedure refresh()
+
+WFlush()
+
+end
+
+##################################################
+
+procedure cls()
+
+EraseArea()
+
+end
+
+##################################################
+
+procedure listx()
+
+WindowContents(view_model3D)
+WindowContents(Subwindow3D)
+
+end
+
+##################################################
+
+procedure iv()
+   local name, posx, posy
+
+   #1st a dummy?
+
+   args := ["d.png","1.png","2.png","3.png","4.png"]
+
+   posx := posy := 20
+
+   every name := !args do {
+      WOpen("image=" || name, "posx=" || posx, "posy=" || posy) | {
+         write(&errout, "*** cannot open image: ", name)
+         next
+         }
+      repeat {
+         case Event() of {
+            "n":  {
+               posx := WAttrib("posx")
+               posy := WAttrib("posy")
+               WClose()
+               break
+               }
+            "q":  exit()#?????
+            }
+         }
+      }
+
+end
+            
+#VOXW03 TEX EDITABLE########################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+
+#########  
+   #
+   #
+   #
+   #  e x   editable
+
+####################################################
+
+procedure inptexpln(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+##########################################################
+
+procedure inpgltexsphere01(px,py,pz,pxx,tex)
+
+WAttrib("texmode=on")
+
+#WAttrib("texture="||(tex)||".png","texcoord=1,0")
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(90,1.0,0.0,0.0)
+Rotate(90,0.0,0.0,1.0)
+
+#Rotate(90,0.0,0.0,0.0) 
+#DrawSphere(0-px,0-py,0+pz,0+pxx)
+#DrawSphere(px,py,pz,pxx)
+DrawSphere(pz,px,py,pxx)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+##############################################################
+
+procedure cyltex01(px,py,pz,pxx,pyy,pzz,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+##############################################################
+
+procedure cyltex02(px,py,pz,pxx,pyy,pzz,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(90,0.0,1.0,0.0)
+Rotate(90,0.0,0.0,1.0)
+Rotate(90,0.0,0.0,0.0)
+  
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+##############################################
+
+procedure texcube01(ipx,ipy,ipz,ips)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=check.png")#change as needed
+
+DrawCube(ipx,ipy,ipz,ips)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texcylinder01(ipx,ipy,ipz,ips,ipq,ipa)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=check.png")#change as needed
+
+DrawCylinder(ipx,ipy,ipz,ips,ipq,ipa)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texplane01(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=check.png","texcoord 0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+end
+
+###################################################################
+
+#VOXW04 VOXELS#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+procedure tpcubemain01(xa1,ya1,za1)
+
+xa2 := xa1
+ya2 := ya1
+za2 := (za1 + 1)
+
+xa3 := xa1
+ya3 := (ya1 - 1)
+za3 := (za1 + 1)
+
+xa4 := xa1
+ya4 := (ya1 - 1)
+za4 := za1
+
+xb2 := (xa1 + 1)
+yb2 := ya1
+zb2 := za1
+
+xb3 := (xa1 + 1)
+yb3 := ya1
+zb3 := (za1 + 1)
+
+xb4 := (xa1 + 1)
+yb4 := (ya1 - 1)
+zb4 := (za1 + 1)
+
+#vals that work
+
+#FillPolygon(0,2,0,0,2,1,0,1,1,0,1,0)
+
+#FillPolygon(0,2,0,1,2,0,1,2,1,0,2,1)
+
+#FillPolygon(0,2,1,1,2,1,1,1,1,0,1,1)
+
+tcplane_a(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)
+
+tcplane_b(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)
+
+tcplane_c(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3) 
+
+tcplane_d(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4) 
+
+end
+
+procedure tcplane_a(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+#WAttrib("texture=1.png")
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=off")
+
+end
+
+procedure tcplane_b(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=2.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+#WAttrib("texture=2.png")
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=off")
+
+end
+
+procedure tcplane_c(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=3.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+#WAttrib("texture=3.png")
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=off")
+
+end
+
+procedure tcplane_d(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=on")
+
+WAttrib("texture=4.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+#WAttrib("texture=4.png")
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+WAttrib("texmode=off")
+
+end
+
+#########
+#########this one works
+
+procedure texcubeinx(va,vb,vc,vd,ve,vf,vg,vh,vi)
+
+   #q := [1,13,25,38,36,23,6]#extreme
+   #q := [1,2,1,2,1,2,1]
+   #q := [.5,.8,.5,.9,0,0,0,0,0]#not so extreme
+
+    #every i := 1 to 25 by 1 do {
+    #every o := 1 to 25 by 1 do {
+
+    q := [ve,vf,vg,vh,vi]
+
+    every i := va to vc by 1 do {
+    every o := vb to vd by 1 do {
+       
+        tpcubemain01(i,?q,o)
+
+#koch_line(Window, point(0.00,0.67), point(0.50,0.67), 5)
+#fract_line(Window, point(0.25,0.25), point(0.50,0.67), i/10.0)
+
+
+  }
+} 
+  
+#WAttrib("texmode=on")
+
+#WAttrib("texture=tc01.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+#FillPolygon(0,1,0, 1,1,0, 1,0,0, 0,0,0)
+
+#FillPolygon(0,2,0,0,2,1,0,1,1,0,1,0)
+
+#FillPolygon(0,2,0,1,2,0,1,2,1,0,2,1)
+
+#FillPolygon(0,2,1,1,2,1,1,1,1,0,1,1)
+
+#FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end           
+#########
+
+#VOXW05 PARTICLES#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+procedure alternate_mainxyz()
+    
+$define Palette "c5"			# default palette
+
+#$define DH 30.0 		# change in hue per pixel
+#$define DL 10.0 		# change in lightness per pixel
+
+   p := Palette
+
+   every i := 1 to 10 by 1 do {
+   every o := 1 to 10 by 1 do { 
+   every q := 1 to 10 by 1 do {
+
+      h := integer(i * DH) || ":"
+      
+         l := 100 - integer(o * DL)
+         hls := h || l || ":100"
+         c := HLSValue(hls)
+         c := PaletteColor(p, PaletteKey(\p, c))
+             
+           Fg(c)
+            DrawPoint(i,q,o)
+
+  }
+ }
+} 
+  
+end
+
+procedure alternate_mainabc()
+
+#ct := ["green","red","blue","yellow","orange","magenta","gray","light gray","dark gray"]
+    
+# "c1" := Palette
+
+#$define Palette "c5"			# default palette
+
+ DH := 60.0 		# change in hue per pixel
+ DL := 100.0 		# change in lightness per pixel
+
+    p := Palette
+
+   every i := 10 to 10 by 150 do {
+   every o := 10 to 10 by 150 do { 
+   every q := 10 to 10 by 150 do {
+
+      h := integer(i * DH) || ":"
+      
+         l := 150 - integer(o * DL)
+         hls := h || l || ":100"
+         c := HLSValue(hls)
+         c := PaletteColor(p, PaletteKey(\p, c))
+             
+           Fg(c)
+            DrawPoint(i,q,o)
+
+  }
+ }
+} 
+  
+end
+          
+procedure mainmath()
+    local L
+    L := list(20)
+    every L[1 to 20] := 1.0 + 0.5 * sqrt(-2.0 * log(?0)) * cos(2.0 * &pi * ?0)
+ 
+    every write(!L)
+
+ #q := [1,13,25,38,36,23,6]#extreme
+
+    every i := 1 to 10 by 5 do {
+    every o := 1 to 10 by 5 do {
+
+            tpcubemain01(!L,i,o)#! might work?????
+ }
+} 
+
+end
+
+#VOXW06 TERRAIN#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+procedure terrain(x,z,y1,y2,y3,y4,t)
+
+ #w:= open("terrain", "gl", "size=600,600", "bg=black") | stop("Can't Open 3D window\n")
+
+#these values assign the basic position of the plane
+
+#(x:=1,z:=1,y1:=1,y2:=1,y3:=1,y4:=1)
+
+#this value sets the texture
+
+#(t:=1)
+
+#these values set the Y values across the mesh
+
+(u1:=?0,a1:=?0,b1:=?0,c1:=?0,d1:=?0,e1:=?0,f1:=?0,g1:=?0,h1:=?0,i1:=?0,j1:=?0)  
+(u2:=?0,a2:=?0,b2:=?0,c2:=?0,d2:=?0,e2:=?0,f2:=?0,g2:=?0,h2:=?0,i2:=?0,j2:=?0)
+(u3:=?0,a3:=?0,b3:=?0,c3:=?0,d3:=?0,e3:=?0,f3:=?0,g3:=?0,h3:=?0,i3:=?0,j3:=?0)
+(u4:=?0,a4:=?0,b4:=?0,c4:=?0,d4:=?0,e4:=?0,f4:=?0,g4:=?0,h4:=?0,i4:=?0,j4:=?0)
+(u5:=?0,a5:=?0,b5:=?0,c5:=?0,d5:=?0,e5:=?0,f5:=?0,g5:=?0,h5:=?0,i5:=?0,j5:=?0)
+(u6:=?0,a6:=?0,b6:=?0,c6:=?0,d6:=?0,e6:=?0,f6:=?0,g6:=?0,h6:=?0,i6:=?0,j6:=?0)
+(u7:=?0,a7:=?0,b7:=?0,c7:=?0,d7:=?0,e7:=?0,f7:=?0,g7:=?0,h7:=?0,i7:=?0,j7:=?0)
+(u8:=?0,a8:=?0,b8:=?0,c8:=?0,d8:=?0,e8:=?0,f8:=?0,g8:=?0,h8:=?0,i8:=?0,j8:=?0)
+(u9:=?0,a9:=?0,b9:=?0,c9:=?0,d9:=?0,e9:=?0,f9:=?0,g9:=?0,h9:=?0,i9:=?0,j9:=?0)
+(u10:=?0,a10:=?0,b10:=?0,c10:=?0,d10:=?0,e10:=?0,f10:=?0,g10:=?0,h10:=?0,i10:=?0,j10:=?0)
+(u11:=?0,a11:=?0,b11:=?0,c11:=?0,d11:=?0,e11:=?0,f11:=?0,g11:=?0,h11:=?0,i11:=?0,j11:=?0)
+
+terrain1k(x,z,y1,y2,y3,y4,u1,a1,b1,c1,d1,e1,f1,g1,h1,i1,j1,u2,a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,u3,a3,b3,c3,d3,e3,f3,g3,h3,i3,j3,u4,a4,b4,c4,d4,e4,f4,g4,h4,i4,j4,u5,a5,b5,c5,d5,e5,f5,g5,h5,i5,j5,u6,a6,b6,c6,d6,e6,f6,g6,h6,i6,j6,u7,a7,b7,c7,d7,e7,f7,g7,h7,i7,j7,u8,a8,b8,c8,d8,e8,f8,g8,h8,i8,j8,u9,a9,b9,c9,d9,e9,f9,g9,h9,i9,j9,u10,a10,b10,c10,d10,e10,f10,g10,h10,i10,j10,u11,a11,b11,c11,d11,e11,f11,g11,h11,i11,j11,t)
+
+   #Eye(w, 10,4,19, 2,0,0, 0,3,0)
+
+    #Refresh(w)
+
+ #Event(w)
+
+end
+
+procedure terrain1k(x,z,y1,y2,y3,y4,u1,a1,b1,c1,d1,e1,f1,g1,h1,i1,j1,u2,a2,b2,c2,d2,e2,f2,g2,h2,i2,j2,u3,a3,b3,c3,d3,e3,f3,g3,h3,i3,j3,u4,a4,b4,c4,d4,e4,f4,g4,h4,i4,j4,u5,a5,b5,c5,d5,e5,f5,g5,h5,i5,j5,u6,a6,b6,c6,d6,e6,f6,g6,h6,i6,j6,u7,a7,b7,c7,d7,e7,f7,g7,h7,i7,j7,u8,a8,b8,c8,d8,e8,f8,g8,h8,i8,j8,u9,a9,b9,c9,d9,e9,f9,g9,h9,i9,j9,u10,a10,b10,c10,d10,e10,f10,g10,h10,i10,j10,u11,a11,b11,c11,d11,e11,f11,g11,h11,i11,j11,t)
+
+
+xx1 := x
+zz1 := z
+
+#row1
+
+inptexplntt001k(xx1,y1+u1,zz1,xx1+1,y2+a1,zz1,xx1+1,y3+a2,zz1+1,xx1,y4+u2,zz1+1,t)
+
+inptexplntt002k(xx1+1,y1+a1,zz1,xx1+2,y2+b1,zz1,xx1+2,y3+b2,zz1+1,xx1+1,y4+a2,zz1+1,t)
+
+inptexplntt003k(xx1+2,y1+b1,zz1,xx1+3,y2+c1,zz1,xx1+3,y3+c2,zz1+1,xx1+2,y4+b2,zz1+1,t)
+
+inptexplntt004k(xx1+3,y1+c1,zz1,xx1+4,y2+d1,zz1,xx1+4,y3+d2,zz1+1,xx1+3,y4+c2,zz1+1,t)
+
+inptexplntt005k(xx1+4,y1+d1,zz1,xx1+5,y2+e1,zz1,xx1+5,y3+e2,zz1+1,xx1+4,y4+d2,zz1+1,t)
+
+inptexplntt006k(xx1+5,y1+e1,zz1,xx1+6,y2+f1,zz1,xx1+6,y3+f2,zz1+1,xx1+5,y4+e2,zz1+1,t)
+
+inptexplntt007k(xx1+6,y1+f1,zz1,xx1+7,y2+g1,zz1,xx1+7,y3+g2,zz1+1,xx1+6,y4+f2,zz1+1,t)
+
+inptexplntt008k(xx1+7,y1+g1,zz1,xx1+8,y2+h1,zz1,xx1+8,y3+h2,zz1+1,xx1+7,y4+g2,zz1+1,t)
+
+inptexplntt009k(xx1+8,y1+h1,zz1,xx1+9,y2+i1,zz1,xx1+9,y3+i2,zz1+1,xx1+8,y4+h2,zz1+1,t)
+
+inptexplntt010k(xx1+9,y1+i1,zz1,xx1+10,y2+j1,zz1,xx1+10,y3+j2,zz1+1,xx1+9,y4+i2,zz1+1,t)
+
+#row2
+
+inptexplntt011k(xx1,y1+u2,zz1+1,xx1+1,y2+a2,zz1+1,xx1+1,y3+a3,zz1+2,xx1,y4+u3,zz1+2,t)
+
+inptexplntt012k(xx1+1,y1+a2,zz1+1,xx1+2,y2+b2,zz1+1,xx1+2,y3+b3,zz1+2,xx1+1,y4+a3,zz1+2,t)
+
+inptexplntt013k(xx1+2,y1+b2,zz1+1,xx1+3,y2+c2,zz1+1,xx1+3,y3+c3,zz1+2,xx1+2,y4+b3,zz1+2,t)
+
+inptexplntt014k(xx1+3,y1+c2,zz1+1,xx1+4,y2+d2,zz1+1,xx1+4,y3+d3,zz1+2,xx1+3,y4+c3,zz1+2,t)
+
+inptexplntt015k(xx1+4,y1+d2,zz1+1,xx1+5,y2+e2,zz1+1,xx1+5,y3+e3,zz1+2,xx1+4,y4+d3,zz1+2,t)
+
+inptexplntt016k(xx1+5,y1+e2,zz1+1,xx1+6,y2+f2,zz1+1,xx1+6,y3+f3,zz1+2,xx1+5,y4+e3,zz1+2,t)
+
+inptexplntt017k(xx1+6,y1+f2,zz1+1,xx1+7,y2+g2,zz1+1,xx1+7,y3+g3,zz1+2,xx1+6,y4+f3,zz1+2,t)
+
+inptexplntt018k(xx1+7,y1+g2,zz1+1,xx1+8,y2+h2,zz1+1,xx1+8,y3+h3,zz1+2,xx1+7,y4+g3,zz1+2,t)
+
+inptexplntt019k(xx1+8,y1+h2,zz1+1,xx1+9,y2+i2,zz1+1,xx1+9,y3+i3,zz1+2,xx1+8,y4+h3,zz1+2,t)
+
+inptexplntt020k(xx1+9,y1+i2,zz1+1,xx1+10,y2+j2,zz1+1,xx1+10,y3+j3,zz1+2,xx1+9,y4+i3,zz1+2,t)
+
+#row3
+
+inptexplntt021k(xx1,y1+u3,zz1+2,xx1+1,y2+a3,zz1+2,xx1+1,y3+a4,zz1+3,xx1,y4+u4,zz1+3,t)
+
+inptexplntt022k(xx1+1,y1+a3,zz1+2,xx1+2,y2+b3,zz1+2,xx1+2,y3+b4,zz1+3,xx1+1,y4+a4,zz1+3,t)
+
+inptexplntt023k(xx1+2,y1+b3,zz1+2,xx1+3,y2+c3,zz1+2,xx1+3,y3+c4,zz1+3,xx1+2,y4+b4,zz1+3,t)
+
+inptexplntt024k(xx1+3,y1+c3,zz1+2,xx1+4,y2+d3,zz1+2,xx1+4,y3+d4,zz1+3,xx1+3,y4+c4,zz1+3,t)
+
+inptexplntt025k(xx1+4,y1+d3,zz1+2,xx1+5,y2+e3,zz1+2,xx1+5,y3+e4,zz1+3,xx1+4,y4+d4,zz1+3,t)
+
+inptexplntt026k(xx1+5,y1+e3,zz1+2,xx1+6,y2+f3,zz1+2,xx1+6,y3+f4,zz1+3,xx1+5,y4+e4,zz1+3,t)
+
+inptexplntt027k(xx1+6,y1+f3,zz1+2,xx1+7,y2+g3,zz1+2,xx1+7,y3+g4,zz1+3,xx1+6,y4+f4,zz1+3,t)
+
+
+inptexplntt028k(xx1+7,y1+g3,zz1+2,xx1+8,y2+h3,zz1+2,xx1+8,y3+h4,zz1+3,xx1+7,y4+g4,zz1+3,t)
+
+inptexplntt029k(xx1+8,y1+h3,zz1+2,xx1+9,y2+i3,zz1+2,xx1+9,y3+i4,zz1+3,xx1+8,y4+h4,zz1+3,t)
+
+inptexplntt030k(xx1+9,y1+i3,zz1+2,xx1+10,y2+j3,zz1+2,xx1+10,y3+j4,zz1+3,xx1+9,y4+i4,zz1+3,t)
+
+#row4
+
+inptexplntt031k(xx1,y1+u4,zz1+3,xx1+1,y2+a4,zz1+3,xx1+1,y3+a5,zz1+4,xx1,y4+u5,zz1+4,t)
+
+inptexplntt032k(xx1+1,y1+a4,zz1+3,xx1+2,y2+b4,zz1+3,xx1+2,y3+b5,zz1+4,xx1+1,y4+a5,zz1+4,t)
+
+inptexplntt033k(xx1+2,y1+b4,zz1+3,xx1+3,y2+c4,zz1+3,xx1+3,y3+c5,zz1+4,xx1+2,y4+b5,zz1+4,t)
+
+inptexplntt034k(xx1+3,y1+c4,zz1+3,xx1+4,y2+d4,zz1+3,xx1+4,y3+d5,zz1+4,xx1+3,y4+c5,zz1+4,t)
+
+inptexplntt035k(xx1+4,y1+d4,zz1+3,xx1+5,y2+e4,zz1+3,xx1+5,y3+e5,zz1+4,xx1+4,y4+d5,zz1+4,t)
+
+inptexplntt036k(xx1+5,y1+e4,zz1+3,xx1+6,y2+f4,zz1+3,xx1+6,y3+f5,zz1+4,xx1+5,y4+e5,zz1+4,t)
+
+inptexplntt037k(xx1+6,y1+f4,zz1+3,xx1+7,y2+g4,zz1+3,xx1+7,y3+g5,zz1+4,xx1+6,y4+f5,zz1+4,t)
+
+inptexplntt038k(xx1+7,y1+g4,zz1+3,xx1+8,y2+h4,zz1+3,xx1+8,y3+h5,zz1+4,xx1+7,y4+g5,zz1+4,t)
+
+inptexplntt039k(xx1+8,y1+h4,zz1+3,xx1+9,y2+i4,zz1+3,xx1+9,y3+i5,zz1+4,xx1+8,y4+h5,zz1+4,t)
+
+inptexplntt040k(xx1+9,y1+i4,zz1+3,xx1+10,y2+j4,zz1+3,xx1+10,y3+j5,zz1+4,xx1+9,y4+i5,zz1+4,t)
+
+#row5
+
+inptexplntt041k(xx1,y1+u5,zz1+4,xx1+1,y2+a5,zz1+4,xx1+1,y3+a6,zz1+5,xx1,y4+u6,zz1+5,t)
+
+inptexplntt042k(xx1+1,y1+a5,zz1+4,xx1+2,y2+b5,zz1+4,xx1+2,y3+b6,zz1+5,xx1+1,y4+a6,zz1+5,t)
+
+inptexplntt043k(xx1+2,y1+b5,zz1+4,xx1+3,y2+c5,zz1+4,xx1+3,y3+c6,zz1+5,xx1+2,y4+b6,zz1+5,t)
+
+inptexplntt044k(xx1+3,y1+c5,zz1+4,xx1+4,y2+d5,zz1+4,xx1+4,y3+d6,zz1+5,xx1+3,y4+c6,zz1+5,t)
+
+inptexplntt045k(xx1+4,y1+d5,zz1+4,xx1+5,y2+e5,zz1+4,xx1+5,y3+e6,zz1+5,xx1+4,y4+d6,zz1+5,t)
+
+inptexplntt046k(xx1+5,y1+e5,zz1+4,xx1+6,y2+f5,zz1+4,xx1+6,y3+f6,zz1+5,xx1+5,y4+e6,zz1+5,t)
+
+inptexplntt047k(xx1+6,y1+f5,zz1+4,xx1+7,y2+g5,zz1+4,xx1+7,y3+g6,zz1+5,xx1+6,y4+f6,zz1+5,t)
+
+inptexplntt048k(xx1+7,y1+g5,zz1+4,xx1+8,y2+h5,zz1+4,xx1+8,y3+h6,zz1+5,xx1+7,y4+g6,zz1+5,t)
+
+inptexplntt049k(xx1+8,y1+h5,zz1+4,xx1+9,y2+i5,zz1+4,xx1+9,y3+i6,zz1+5,xx1+8,y4+h6,zz1+5,t)
+
+inptexplntt050k(xx1+9,y1+i5,zz1+4,xx1+10,y2+j5,zz1+4,xx1+10,y3+j6,zz1+5,xx1+9,y4+i6,zz1+5,t)
+
+#row6
+
+inptexplntt051k(xx1,y1+u6,zz1+5,xx1+1,y2+a6,zz1+5,xx1+1,y3+a7,zz1+6,xx1,y4+u7,zz1+6,t)
+
+inptexplntt052k(xx1+1,y1+a6,zz1+5,xx1+2,y2+b6,zz1+5,xx1+2,y3+b7,zz1+6,xx1+1,y4+a7,zz1+6,t)
+
+inptexplntt053k(xx1+2,y1+b6,zz1+5,xx1+3,y2+c6,zz1+5,xx1+3,y3+c7,zz1+6,xx1+2,y4+b7,zz1+6,t)
+
+inptexplntt054k(xx1+3,y1+c6,zz1+5,xx1+4,y2+d6,zz1+5,xx1+4,y3+d7,zz1+6,xx1+3,y4+c7,zz1+6,t)
+
+
+inptexplntt055k(xx1+4,y1+d6,zz1+5,xx1+5,y2+e6,zz1+5,xx1+5,y3+e7,zz1+6,xx1+4,y4+d7,zz1+6,t)
+
+inptexplntt056k(xx1+5,y1+e6,zz1+5,xx1+6,y2+f6,zz1+5,xx1+6,y3+f7,zz1+6,xx1+5,y4+e7,zz1+6,t)
+
+inptexplntt057k(xx1+6,y1+f6,zz1+5,xx1+7,y2+g6,zz1+5,xx1+7,y3+g7,zz1+6,xx1+6,y4+f7,zz1+6,t)
+
+inptexplntt058k(xx1+7,y1+g6,zz1+5,xx1+8,y2+h6,zz1+5,xx1+8,y3+h7,zz1+6,xx1+7,y4+g7,zz1+6,t)
+
+inptexplntt059k(xx1+8,y1+h6,zz1+5,xx1+9,y2+i6,zz1+5,xx1+9,y3+i7,zz1+6,xx1+8,y4+h7,zz1+6,t)
+
+inptexplntt060k(xx1+9,y1+i6,zz1+5,xx1+10,y2+j6,zz1+5,xx1+10,y3+j7,zz1+6,xx1+9,y4+i7,zz1+6,t)
+
+#row7
+
+inptexplntt061k(xx1,y1+u7,zz1+6,xx1+1,y2+a7,zz1+6,xx1+1,y3+a8,zz1+7,xx1,y4+u8,zz1+7,t)
+
+inptexplntt062k(xx1+1,y1+a7,zz1+6,xx1+2,y2+b7,zz1+6,xx1+2,y3+b8,zz1+7,xx1+1,y4+a8,zz1+7,t)
+
+inptexplntt063k(xx1+2,y1+b7,zz1+6,xx1+3,y2+c7,zz1+6,xx1+3,y3+c8,zz1+7,xx1+2,y4+b8,zz1+7,t)
+
+inptexplntt064k(xx1+3,y1+c7,zz1+6,xx1+4,y2+d7,zz1+6,xx1+4,y3+d8,zz1+7,xx1+3,y4+c8,zz1+7,t)
+
+inptexplntt065k(xx1+4,y1+d7,zz1+6,xx1+5,y2+e7,zz1+6,xx1+5,y3+e8,zz1+7,xx1+4,y4+d8,zz1+7,t)
+
+inptexplntt066k(xx1+5,y1+e7,zz1+6,xx1+6,y2+f7,zz1+6,xx1+6,y3+f8,zz1+7,xx1+5,y4+e8,zz1+7,t)
+
+inptexplntt067k(xx1+6,y1+f7,zz1+6,xx1+7,y2+g7,zz1+6,xx1+7,y3+g8,zz1+7,xx1+6,y4+f8,zz1+7,t)
+
+inptexplntt068k(xx1+7,y1+g7,zz1+6,xx1+8,y2+h7,zz1+6,xx1+8,y3+h8,zz1+7,xx1+7,y4+g8,zz1+7,t)
+
+inptexplntt069k(xx1+8,y1+h7,zz1+6,xx1+9,y2+i7,zz1+6,xx1+9,y3+i8,zz1+7,xx1+8,y4+h8,zz1+7,t)
+
+inptexplntt070k(xx1+9,y1+i7,zz1+6,xx1+10,y2+j7,zz1+6,xx1+10,y3+j8,zz1+7,xx1+9,y4+i8,zz1+7,t)
+
+#row8
+
+inptexplntt071k(xx1,y1+u8,zz1+7,xx1+1,y2+a8,zz1+7,xx1+1,y3+a9,zz1+8,xx1,y4+u9,zz1+8,t)
+
+inptexplntt072k(xx1+1,y1+a8,zz1+7,xx1+2,y2+b8,zz1+7,xx1+2,y3+b9,zz1+8,xx1+1,y4+a9,zz1+8,t)
+
+inptexplntt073k(xx1+2,y1+b8,zz1+7,xx1+3,y2+c8,zz1+7,xx1+3,y3+c9,zz1+8,xx1+2,y4+b9,zz1+8,t)
+
+inptexplntt074k(xx1+3,y1+c8,zz1+7,xx1+4,y2+d8,zz1+7,xx1+4,y3+d9,zz1+8,xx1+3,y4+c9,zz1+8,t)
+
+inptexplntt075k(xx1+4,y1+d8,zz1+7,xx1+5,y2+e8,zz1+7,xx1+5,y3+e9,zz1+8,xx1+4,y4+d9,zz1+8,t)
+
+inptexplntt076k(xx1+5,y1+e8,zz1+7,xx1+6,y2+f8,zz1+7,xx1+6,y3+f9,zz1+8,xx1+5,y4+e9,zz1+8,t)
+
+inptexplntt077k(xx1+6,y1+f8,zz1+7,xx1+7,y2+g8,zz1+7,xx1+7,y3+g9,zz1+8,xx1+6,y4+f9,zz1+8,t)
+
+inptexplntt078k(xx1+7,y1+g8,zz1+7,xx1+8,y2+h8,zz1+7,xx1+8,y3+h9,zz1+8,xx1+7,y4+g9,zz1+8,t)
+
+inptexplntt079k(xx1+8,y1+h8,zz1+7,xx1+9,y2+i8,zz1+7,xx1+9,y3+i9,zz1+8,xx1+8,y4+h9,zz1+8,t)
+
+inptexplntt080k(xx1+9,y1+i8,zz1+7,xx1+10,y2+j8,zz1+7,xx1+10,y3+j9,zz1+8,xx1+9,y4+i9,zz1+8,t)
+
+#row9
+
+inptexplntt081k(xx1,y1+u9,zz1+8,xx1+1,y2+a9,zz1+8,xx1+1,y3+a10,zz1+9,xx1,y4+u10,zz1+9,t)
+
+
+inptexplntt082k(xx1+1,y1+a9,zz1+8,xx1+2,y2+b9,zz1+8,xx1+2,y3+b10,zz1+9,xx1+1,y4+a10,zz1+9,t)
+
+inptexplntt083k(xx1+2,y1+b9,zz1+8,xx1+3,y2+c9,zz1+8,xx1+3,y3+c10,zz1+9,xx1+2,y4+b10,zz1+9,t)
+
+inptexplntt084k(xx1+3,y1+c9,zz1+8,xx1+4,y2+d9,zz1+8,xx1+4,y3+d10,zz1+9,xx1+3,y4+c10,zz1+9,t)
+
+inptexplntt085k(xx1+4,y1+d9,zz1+8,xx1+5,y2+e9,zz1+8,xx1+5,y3+e10,zz1+9,xx1+4,y4+d10,zz1+9,t)
+
+inptexplntt086k(xx1+5,y1+e9,zz1+8,xx1+6,y2+f9,zz1+8,xx1+6,y3+f10,zz1+9,xx1+5,y4+e10,zz1+9,t)
+
+inptexplntt087k(xx1+6,y1+f9,zz1+8,xx1+7,y2+g9,zz1+8,xx1+7,y3+g10,zz1+9,xx1+6,y4+f10,zz1+9,t)
+
+inptexplntt088k(xx1+7,y1+g9,zz1+8,xx1+8,y2+h9,zz1+8,xx1+8,y3+h10,zz1+9,xx1+7,y4+g10,zz1+9,t)
+
+inptexplntt089k(xx1+8,y1+h9,zz1+8,xx1+9,y2+i9,zz1+8,xx1+9,y3+i10,zz1+9,xx1+8,y4+h10,zz1+9,t)
+
+inptexplntt090k(xx1+9,y1+i9,zz1+8,xx1+10,y2+j9,zz1+8,xx1+10,y3+j10,zz1+9,xx1+9,y4+i10,zz1+9,t)
+
+#row10
+
+inptexplntt091k(xx1,y1+u10,zz1+9,xx1+1,y2+a10,zz1+9,xx1+1,y3+a11,zz1+10,xx1,y4+u11,zz1+10,t)
+
+inptexplntt092k(xx1+1,y1+a10,zz1+9,xx1+2,y2+b10,zz1+9,xx1+2,y3+b11,zz1+10,xx1+1,y4+a11,zz1+10,t)
+
+inptexplntt093k(xx1+2,y1+b10,zz1+9,xx1+3,y2+c10,zz1+9,xx1+3,y3+c11,zz1+10,xx1+2,y4+b11,zz1+10,t)
+
+inptexplntt094k(xx1+3,y1+c10,zz1+9,xx1+4,y2+d10,zz1+9,xx1+4,y3+d11,zz1+10,xx1+3,y4+c11,zz1+10,t)
+
+inptexplntt095k(xx1+4,y1+d10,zz1+9,xx1+5,y2+e10,zz1+9,xx1+5,y3+e11,zz1+10,xx1+4,y4+d11,zz1+10,t)
+
+inptexplntt096k(xx1+5,y1+e10,zz1+9,xx1+6,y2+f10,zz1+9,xx1+6,y3+f11,zz1+10,xx1+5,y4+e11,zz1+10,t)
+
+inptexplntt097k(xx1+6,y1+f10,zz1+9,xx1+7,y2+g10,zz1+9,xx1+7,y3+g11,zz1+10,xx1+6,y4+f11,zz1+10,t)
+
+inptexplntt098k(xx1+7,y1+g10,zz1+9,xx1+8,y2+h10,zz1+9,xx1+8,y3+h11,zz1+10,xx1+7,y4+g11,zz1+10,t)
+
+inptexplntt099k(xx1+8,y1+h10,zz1+9,xx1+9,y2+i10,zz1+9,xx1+9,y3+i11,zz1+10,xx1+8,y4+h11,zz1+10,t)
+
+inptexplntt100k(xx1+9,y1+i10,zz1+9,xx1+10,y2+j10,zz1+9,xx1+10,y3+j11,zz1+10,xx1+9,y4+i11,zz1+10,t)
+
+end
+
+################################################################
+                                                                                 
+procedure inptexplntt001k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,1.0,0.0,0.9,0.10,0.9,0.10,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt002k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.9,0.0,0.8,0.10,0.8,0.10,0.9")                                       
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt003k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.8,0.0,0.7,0.10,0.7,0.10,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt004k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.7,0.0,0.6,0.10,0.6,0.10,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt005k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.6,0.0,0.5,0.10,0.5,0.10,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt006k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.5,0.0,0.4,0.10,0.4,0.10,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt007k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.4,0.0,0.3,0.10,0.3,0.10,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt008k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.3,0.0,0.2,0.10,0.2,0.10,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt009k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.2,0.0,0.1,0.10,0.1,0.10,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt010k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,0.1,0.0,0.0,0.10,0.0,0.10,0.1")                                           
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+
+procedure inptexplntt011k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,1.0,0.1,0.9,0.2,0.9,0.2,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt012k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.9,0.1,0.8,0.2,0.8,0.2,0.9")                                       
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt013k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.8,0.1,0.7,0.2,0.7,0.2,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt014k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.7,0.1,0.6,0.2,0.6,0.2,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt015k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.6,0.1,0.5,0.2,0.5,0.2,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt016k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.5,0.1,0.4,0.2,0.4,0.2,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt017k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.4,0.1,0.3,0.2,0.3,0.2,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt018k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.3,0.1,0.2,0.2,0.2,0.2,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt019k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.2,0.1,0.1,0.2,0.1,0.2,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt020k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.1,0.1,0.1,0.0,0.2,0.0,0.2,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+
+procedure inptexplntt021k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,1.0,0.2,0.9,0.3,0.9,0.3,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt022k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.9,0.2,0.8,0.3,0.8,0.3,0.9")                                       
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt023k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.8,0.2,0.7,0.3,0.7,0.3,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt024k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.7,0.2,0.6,0.3,0.6,0.3,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt025k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.6,0.2,0.5,0.3,0.5,0.3,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt026k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.5,0.2,0.4,0.3,0.4,0.3,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt027k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.4,0.2,0.3,0.3,0.3,0.3,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt028k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.3,0.2,0.2,0.3,0.2,0.3,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt029k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.2,0.2,0.1,0.3,0.1,0.3,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt030k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.2,0.1,0.2,0.0,0.3,0.0,0.3,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+                                                                                           
+procedure inptexplntt031k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,1.0,0.3,0.9,0.4,0.9,0.4,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt032k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.9,0.3,0.8,0.4,0.8,0.4,0.9")                                      
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt033k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.8,0.3,0.7,0.4,0.7,0.4,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt034k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.7,0.3,0.6,0.4,0.6,0.4,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt035k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.6,0.3,0.5,0.4,0.5,0.4,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt036k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.5,0.3,0.4,0.4,0.4,0.4,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt037k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.4,0.3,0.3,0.4,0.3,0.4,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt038k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.3,0.3,0.2,0.4,0.2,0.4,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt039k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.2,0.3,0.1,0.4,0.1,0.4,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt040k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.3,0.1,0.3,0.0,0.4,0.0,0.4,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+
+procedure inptexplntt041k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,1.0,0.4,0.9,0.5,0.9,0.5,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt042k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.9,0.4,0.8,0.5,0.8,0.5,0.9")                                       
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt043k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.8,0.4,0.7,0.5,0.7,0.5,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt044k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.7,0.4,0.6,0.5,0.6,0.5,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt045k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.6,0.4,0.5,0.5,0.5,0.5,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt046k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.5,0.4,0.4,0.5,0.4,0.5,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt047k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.4,0.4,0.3,0.5,0.3,0.5,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt048k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.3,0.4,0.2,0.5,0.2,0.5,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt049k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.2,0.4,0.1,0.5,0.1,0.5,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt050k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.4,0.1,0.4,0.0,0.5,0.0,0.5,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+
+procedure inptexplntt051k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,1.0,0.5,0.9,0.6,0.9,0.6,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt052k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.9,0.5,0.8,0.6,0.8,0.6,0.9")                                        
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt053k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.8,0.5,0.7,0.6,0.7,0.6,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt054k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.7,0.5,0.6,0.6,0.6,0.6,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt055k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.6,0.5,0.5,0.6,0.5,0.6,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt056k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.5,0.5,0.4,0.6,0.4,0.6,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt057k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.4,0.5,0.3,0.6,0.3,0.6,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt058k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.3,0.5,0.2,0.6,0.2,0.6,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt059k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.2,0.5,0.1,0.6,0.1,0.6,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt060k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.5,0.1,0.5,0.0,0.6,0.0,0.6,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+################################################################
+                                                                                           
+procedure inptexplntt061k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,1.0,0.6,0.9,0.7,0.9,0.7,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt062k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.9,0.6,0.8,0.7,0.8,0.7,0.9")                                    
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt063k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.8,0.6,0.7,0.7,0.7,0.7,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt064k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.7,0.6,0.6,0.7,0.6,0.7,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt065k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.6,0.6,0.5,0.7,0.5,0.7,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt066k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.5,0.6,0.4,0.7,0.4,0.7,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt067k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.4,0.6,0.3,0.7,0.3,0.7,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt068k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.3,0.6,0.2,0.7,0.2,0.7,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt069k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.2,0.6,0.1,0.7,0.1,0.7,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt070k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.6,0.1,0.6,0.0,0.7,0.0,0.7,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+                                                                                           
+procedure inptexplntt071k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,1.0,0.7,0.9,0.8,0.9,0.8,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt072k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.9,0.7,0.8,0.8,0.8,0.8,0.9")                                     
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt073k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.8,0.7,0.7,0.8,0.7,0.8,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt074k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.7,0.7,0.6,0.8,0.6,0.8,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt075k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.6,0.7,0.5,0.8,0.5,0.8,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt076k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.5,0.7,0.4,0.8,0.4,0.8,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt077k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.4,0.7,0.3,0.8,0.3,0.8,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt078k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.3,0.7,0.2,0.8,0.2,0.8,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt079k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.2,0.7,0.1,0.8,0.1,0.8,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt080k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.7,0.1,0.7,0.0,0.8,0.0,0.8,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+
+################################################################
+
+
+procedure inptexplntt081k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,1.0,0.8,0.9,0.9,0.9,0.9,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt082k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.9,0.8,0.8,0.9,0.8,0.9,0.9")                                        
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt083k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.8,0.8,0.7,0.9,0.7,0.9,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt084k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.7,0.8,0.6,0.9,0.6,0.9,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt085k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.6,0.8,0.5,0.9,0.5,0.9,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt086k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.5,0.8,0.4,0.9,0.4,0.9,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt087k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.4,0.8,0.3,0.9,0.3,0.9,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt088k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.3,0.8,0.2,0.9,0.2,0.9,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt089k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.2,0.8,0.1,0.9,0.1,0.9,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt090k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.8,0.1,0.8,0.0,0.9,0.0,0.9,0.1") 
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+                                                                                          
+###########################################################################
+
+procedure inptexplntt091k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,1.0,0.9,0.9,1.0,0.9,1.0,1.0")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt092k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.9,0.9,0.8,1.0,0.8,1.0,0.9")                                     
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt093k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.8,0.9,0.7,1.0,0.7,1.0,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt094k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.7,0.9,0.6,1.0,0.6,1.0,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt095k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.6,0.9,0.5,1.0,0.5,1.0,0.6")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt096k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.5,0.9,0.4,1.0,0.4,1.0,0.5")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt097k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.4,0.9,0.3,1.0,0.3,1.0,0.4")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt098k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.3,0.9,0.2,1.0,0.2,1.0,0.3")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt099k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.2,0.9,0.1,1.0,0.1,1.0,0.2")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplntt100k(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.9,0.1,0.9,0.0,1.0,0.0,1.0,0.1")                                             
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+end
+
+
+
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
+#4 SQUARE TEX TEST
+
+#planes for terrain mesh  #"texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+procedure inptexplnt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex,t1,t2,t3,t4,t5,t6,t7,t8)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+Texcoord(t1,t2,t3,t4,t5,t6,t7,t8)
+                                          
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+procedure inptexplnt002(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex,t1,t2,t3,t4,t5,t6,t7,t8)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+Texcoord(t1,t2,t3,t4,t5,t6,t7,t8)
+
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+procedure inptexplnt003(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex,t1,t2,t3,t4,t5,t6,t7,t8)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+Texcoord(t1,t2,t3,t4,t5,t6,t7,t8)
+
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+procedure inptexplnt004(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex,t1,t2,t3,t4,t5,t6,t7,t8)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+Texcoord(t1,t2,t3,t4,t5,t6,t7,t8)
+
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+
+#VOXW07 NON EDITABLE TEX#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+
+##################################################
+#1st tex preset group
+##################################################
+##################################################
+#ALL THESE ASSIGNED TO BUTTONS/GUI
+
+procedure gridplane01()
+
+WAttrib("texmode=on")
+
+WAttrib("texture=grid.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(-65,0,-124,65,0,-124,65,0,50,-65,0,50)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texgroundplane01()
+
+#texskysphere01()
+
+WAttrib("texmode=on")
+
+WAttrib("texture=g01.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(-65,0,-124,65,0,-124,65,0,50,-65,0,50)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texskyplane01()
+
+WAttrib("texmode=on")
+
+WAttrib("texture=splane.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(-129,8,-249,129,8,-249,129,8,100,-129,8,100)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texskyplane02() #backplane
+
+WAttrib("texmode=on")
+
+WAttrib("texture=bs.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+#FillPolygon(-75,100,-124,200,100,-124,200,0,-124,-75,0,-124)
+#FillPolygon(-95,100,-124,200,100,-124,200,-80,-124,-95,-80,-124)
+
+#FillPolygon(-75,100,-124,75,100,-124,75,0,-124,-75,0,-124)
+
+FillPolygon(-100,125,-124,100,125,-124,100,0,-124,-100,0,-124)
+
+WAttrib("texmode=off") 
+
+end
+
+
+##################################################
+#2nd tex plane group
+##################################################
+
+procedure texskysphere02()
+
+WAttrib("texmode=on")
+
+#WAttrib ("texture=sphere2.png")#change as needed
+
+WAttrib("texture=bs.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+#FillPolygon(-129,-.5,-249,129,-.5,-249,129,-.5,100,-129,-.5,100)
+
+#FillPolygon(-129,100,-249,129,100,-249,-129,-.5,-249,129,-.5,-249)
+
+#x := -1
+#y := 0
+#z := -5
+#r := 250
+
+#DrawSphere(x,y,z,r)
+
+WAttrib("texmode=off") 
+
+end
+
+###################################################
+
+procedure texskysphere01()
+
+WAttrib("texmode=on")
+
+WAttrib ("texture=bs.png")#change as needed
+
+x := -1
+y := 0
+z := -5
+r := 250
+
+DrawSphere(x,y,z,r)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texskysphere05()
+
+WAttrib("texcoord=auto","texmode=on")
+
+WAttrib ("texture=splane.png")#change as needed
+
+x := -1
+y := -10
+z := -5
+r := 250
+
+PushMatrix()
+
+Rotate(90,0.0,0.0,1.0)
+  
+DrawSphere(x,y,z,r)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+
+procedure texgroundplane05()
+
+#texskysphere01()
+
+WAttrib("texmode=on")
+
+WAttrib("texture=gplane2.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(-129,-.5,-249,129,-.5,-249,129,-.5,100,-129,-.5,100)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure texskyplane05()
+
+WAttrib("texmode=on")
+
+WAttrib("texture=splane2.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+
+FillPolygon(-129,8,-249,129,8,-249,129,8,100,-129,8,100)
+
+WAttrib("texmode=off") 
+
+end
+
+##########################################################
+
+procedure edittexskysphere05()
+
+WAttrib("texmode=on")
+
+WAttrib ("texture=8.png")#change as needed
+
+x := -1
+y := 0
+z := -5
+r := 250
+
+DrawSphere(x,y,z,r)
+
+WAttrib("texmode=off") 
+
+end
+
+##################################################
+
+procedure edittexgroundplane05()
+
+#using for back sky plane
+
+#WAttrib("texmode=on")
+#WAttrib("texture=sphere2.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+#FillPolygon(-160,100,-249,225,100,-249,225,-70,-249,-160,-70,-249)
+#WAttrib("texmode=off") 
+
+
+WAttrib("texmode=on")
+WAttrib("10.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")#change as needed
+FillPolygon(-129,-.5,-249,129,-.5,-249,129,-.5,100,-129,-.5,100)
+WAttrib("texmode=off") 
+
+end
+
+#VOXW08 NON TEXTURED ELEMENTS###############################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+
+#non-tex
+######################################################
+
+procedure inpglcube01(ipx,ipy,ipz,ips,rgb)
+
+Fg(rgb)
+DrawCube(ipx,ipy,ipz,ips)
+
+return()
+
+end
+
+##################################################
+
+procedure inpglsphere01(ipx,ipy,ipz,ips,rgb)
+
+Fg(rgb)
+DrawSphere(ipx,ipy,ipz,ips)
+
+return()
+
+end
+
+##################################################
+
+procedure inpglcylinder01(ipx,ipy,ipz,ips,ipq,ipa,rgb)
+
+Fg(rgb)
+DrawCylinder(ipx,ipy,ipz,ips,ipq,ipa)
+
+end
+
+##################################################
+
+procedure inpglplane01(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,rgb)
+
+Fg(rgb)
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+end
+
+procedure scene02(x,y,z,s)
+
+v:=[0,0.5,1,1.5,2,2.5,3,3.5,4]
+
+vv:=[?0,?0.5,?1,?1.5,?2,?2.5,?3,?3.5,?4]
+
+Fg("blue")
+every x := !v do
+every z := !v do
+every y := !vv do
+
+DrawCube(x,y,z,s)
+
+end
+
+#######################################################
+
+procedure scene03(x,xx,z,zz)
+
+Fg("blue")
+
+va:=[[0,0.5,1,1.5,2,2.5,3,3.5,4],[0,0.5,1,1.5,2,2.5,3,3.5,4]]
+
+every x := !va[1] do
+every z := !va[1] do
+
+every xx := !va[2] do
+every zz := !va[2] do
+
+DrawCube(x,0,z,.1)
+DrawCube(xx,.5,zz,.1)
+
+end
+
+#######################################################
+
+procedure scene04()
+
+voxBase(0,.1,0,0.5,1,1.5,2,-2,.5)
+voxBase(1,.1,0,0.5,1,1.5,2,-3,.5)
+voxBase(1,.1,0,0.5,1,1.5,2,-4,.5)
+voxBase(1,.1,0,0.5,1,1.5,2,-5,.5)
+voxBase(1,.1,0,0.5,1,1.5,2,-6,.5)
+voxBase(1,.1,0,0.5,1,1.5,2,-7,.5)
+
+end
+
+#######################################################
+
+procedure voxBase(yy,ss,x1,x2,x3,x4,x5,x6)
+
+v:=[x1,x2,x3,x4,x5,x6]
+
+every x := !v do
+every z := !v do
+
+y := yy 
+s := ss
+
+Fg("blue")
+
+DrawCube(x,y,z,s)
+
+end
+
+#######################################################
+
+procedure scene05()
+
+scene06(18,1,0,1)
+scene06(18,1,1,1)
+scene06(18,1,2,1)
+scene06(18,1,3,1)
+scene06(14,1,4,1)
+scene06(13,1,5,1)
+
+end
+
+#######################################################
+
+procedure scene06(x,zq,y,sq,wq,oq)
+
+Fg("green")
+
+width := wq #80
+offset := oq #5
+
+every y := 0 to width - 1 do
+every x := 0 to width - 1 do
+        
+if iand(x, y) = 0 then DrawCube(x * offset, zq,y * offset,sq)
+
+end
+
+##########################################################
+
+procedure scene07(x,y,z)
+
+v:=[0,0.5,1,1.5,2,2.5,3,1]
+
+vv:=[1,2,3,4,5,6,7,8]
+
+vvv := [2,4,6,8,0]
+
+   wsize := 25
+   cmax  := 90
+ 
+ every x := 0 to !v -1 do
+   every y  := 0 to !vv -1 do
+    every z  := 0 to !vvv -1 do {
+         #c := cmax/wsize * iand(wsize-1,ixor(x,y))
+         #Fg(sprintf("%d,%d,%d",c,cmax-c,0))
+Fg("65000,1,1")
+         DrawCube(x,?y,z,.5)
+
+}
+
+end
+
+#################################################################
+
+procedure scene08(x,y,xx,s)
+
+#x := 0
+#y := 0
+s := .1
+
+v:=[0,0.5,1,1.5,2,2.5,3,1]
+#v := [[1,2,3],[1,2,3]]
+
+vv:=[1,2,3,4]
+
+#every y := !v[1] do
+#every x := !v[2] do
+
+Fg("blue")
+every x := !v  do
+every y := !v do
+every xx := !vv do
+#every yy := !vvv do
+
+DrawCube(x,1,1,s)
+DrawCube(x,2,1,s)
+DrawCube(x,3,1,s)
+end
+
+#############################
+
+procedure scene09(x,y,w,h)
+
+colors:= ["red", "blue", "green","yellow", "purple", "white", "black"] 
+
+#Rect:=[FiIIRectangle, DrawRectangle] 
+#Rect := [DrawCube]
+
+#repeat{ w:=?Width h:=?Height x:=?Width-w/2 Y:=?Height-h/2
+
+w:=5
+h:= 3 
+x:=2-w/2 
+y:= 4-h/2 
+
+Fg(?colors) 
+DrawCube(x,y,w,h)
+
+end
+
+###############################################################
+
+procedure scene10()
+
+x1 := [1,4,5,7]
+x2 := [2,3,4,5]
+
+voxChunkBlock04(12,x1[1],13,x1[2],14,x1[3],15,x1[4],12,x2[1],13,x2[2],14,x2[3],15,x2[4])
+
+end
+
+##########################################################
+
+
+
+
+
+
+#VOXW10 3D CAD#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+
+procedure inpglline01(ipx,ipy,ipz,iqx,iqy,iqz,cq)
+
+rgb := colorTable(cq)
+
+Fg(rgb)
+DrawLine(ipx,ipy,ipz,iqx,iqy,iqz)
+
+return()
+
+end
+
+#WRITE PROCEDURE FOR LINE BOX
+#drawpolygon not working?
+
+procedure inpglpolyline01(ix,iy,iz,jx,jy,jz,lx,ly,lz,kx,ky,kz,cq)
+
+rgb := colorTable(cq)
+
+Fg(rgb)
+
+DrawLine(ix,iy,iz,jx,jy,jz)
+DrawLine(jx,jy,jz,lx,ly,lz)
+DrawLine(lx,ly,lz,kx,ky,kz)
+DrawLine(kx,ky,kz,ix,iy,iz)
+
+return()
+
+end
+
+##############################################################
+
+
+###############################################################
+#VOXW13 MY GIT LIBRARY (NOT A KNIGHTS TEMPLAR)
+
+procedure mainkt01()
+ 
+#w:= open("textured cube", "gl", "size=600,600", "bg=black") | stop("Can't Open 3D window\n")
+    
+ texcubeinxkt(1,1,1,1,1,1,1,1,1)
+
+    #Eye(w, 0,2,8, 2,0,0, 0,1,0)
+
+    Refresh()
+
+ #Event()
+
+end
+
+
+procedure texcubeinkt(at)
+
+  (ax := at[1],bx := at[2],cx := at[3])
+  (dx := at[4],ex := at[5],fx := at[6])
+  (gx := at[7],hx := at[8],ix := at[9])
+
+  x := (ax||bx||cx)  
+  y := (dx||ex||fx) 
+  z := (gx||hx||ix) 
+
+ tpcubemain01kt(x,y,z)
+
+end
+
+procedure tpcubemain01kt(xa1,ya1,za1)
+
+  xa2 := xa1
+  ya2 := ya1
+  za2 := (za1 + 1)
+
+  xa3 := xa1
+  ya3 := (ya1 - 1)
+  za3 := (za1 + 1)
+
+  xa4 := xa1
+  ya4 := (ya1 - 1)
+  za4 := za1
+
+  xb2 := (xa1 + 1)
+  yb2 := ya1
+  zb2 := za1
+
+  xb3 := (xa1 + 1)
+  yb3 := ya1
+  zb3 := (za1 + 1)
+
+  xb4 := (xa1 + 1)
+  yb4 := (ya1 - 1)
+  zb4 := (za1 + 1)
+
+  tcplaneakt(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)#left side
+
+  tcplanebkt(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)#top
+
+  tcplaneckt(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3)#front 
+
+  tcplanedkt(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4)#right side
+
+  tcplaneekt(xa1,ya1,za1,xb3,ya1,za1,xb3,ya4,za4,xa4,ya4,za4)#back 
+
+  tcplanefkt(xa4,ya4,za4,xb3,ya4,za4,xb3,ya3,za3,xa3,ya3,za3)#bottom  
+
+end
+
+
+procedure tcplaneakt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplanebkt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplaneckt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplanedkt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplaneekt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplanefkt(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=1.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+ WAttrib("texmode=off")
+
+end
+
+
+
+procedure texcubeinxkt(va,vb,vc,vd,ve,vf,vg,vh,vi)
+
+    #these parameters can be changed to create voxel-type arrays
+
+    q := [ve,vf,vg,vh,vi] 
+
+    every i := va to vc by 1 do {
+    every o := vb to vd by 1 do {
+       
+        tpcubemain01kt(i,?q,o)
+
+  }
+} 
+  
+
+WAttrib("texmode=off") 
+
+return()
+
+end           
+          
+
+
+
+
+
+procedure mainGL03()
+
+ # w:= open("textured sphere", "gl", "size=600,600", "bg=black", "buffer=on") | stop("Can't Open 3D window\n")
+
+  WAttrib("buffer=on")
+
+  WAttrib("slices=45", "rings=45" ) #these vals increase/decrease tesselation
+    
+  WAttrib("texmode=on","texture=1.png")
+
+  PushMatrix()
+
+  Rotate(90,1.0,0.0,0.0)
+  
+  DrawSphere(1,1,1,1)
+
+  PopMatrix()
+
+ #Eye(w, 0,2,8, 2,0,0, 0,1,0)
+
+  #Refresh()
+
+ #Event(w)
+
+end
+
+procedure gl04(tex)
+
+ # w:= open("textured plane", "gl", "size=600,600", "bg=black", "buffer=on") | stop("Can't Open 3D window\n")
+    
+  #WAttrib("texmode=on","texture=1.png")
+  #WAttrib("texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture="||(tex)||".png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+  FillPolygon(1,0,1,3,0,1,3,2,1,1,2,1)
+
+  #Eye( 0,0,8, 2,0,0, 0,1,0)
+
+  #Refresh()
+
+  WAttrib("texmode=off") 
+
+return()
+
+end
+
+procedure mainGL05()
+
+ # w:= open("textured cylinder", "gl", "size=600,600", "bg=black", "buffer=on") | stop("Can't Open 3D window\n")
+
+  WAttrib("slices=45", "rings=45" ) #these vals increase/decrease tesselation
+    
+  WAttrib("texmode=on","texture=1.png")
+
+  PushMatrix()
+
+  Rotate(90,0.0,0.0,1.0)
+
+  DrawCylinder(1,1,1,2,1,1)
+
+  PopMatrix()
+
+  #Eye( 0,0,8, -2,0,0, 0,1,0)
+
+  Refresh()
+
+ #Event()
+
+end
+
+procedure mainGL06()
+  
+# w:= open("Point Grid", "gl", "size=600,600", "bg=black") | stop("Can't Open 3D window\n")
+
+  pgrid_main()
+
+   # Eye( 15,0,15, 5,6,0, 0,1,0)
+
+    Refresh()
+
+ #Event()
+
+end
+
+procedure pgrid_main()
+    
+   $define Palette "c5"			
+
+    $define DH 30.0 		# change in hue per pixel
+    $define DL 10.0 		# change in lightness per pixel
+
+    p := Palette
+
+    every i := 1 to 10 by 1 do { #use these to increase/decrease matrice size
+    every o := 1 to 10 by 1 do { #use these to increase/decrease matrice size
+    every q := 1 to 10 by 1 do { #use these to increase/decrease matrice size
+
+     h := integer(i * DH) || ":"
+      
+    l := 100 - integer(o * DL)
+    hls := h || l || ":100"
+    c := HLSValue(hls)
+    c := PaletteColor(p, PaletteKey(\p, c))
+             
+    Fg(c)
+    DrawPoint(i,q,o)
+
+  }
+ }
+} 
+  
+end
+
+##############################################################
+##############################################################
+##############################################################
+##############################################################
+
+
+
+
+
+#VOXW11
+##############################################################
+
+#pcs for special project_SR
+
+#main columns###########################################################
+
+procedure procspecmainx() #base z vals 0 , -000.5
+
+z1 := 0
+z2 := -000.5
+z3 := 0
+z4 := 0
+
+procspecmainq(z1,z2,z3,z4)
+
+zz1 := -10
+zz2 := -010.5
+zz3 := 0
+zz4 := 0
+
+procspecmainq(zz1,zz2,zz3,zz4)
+
+zzz1 := -20
+zzz2 := -020.5
+zzz3 := 2
+zzz4 := 5
+
+procspecmainq(zzz1,zzz2,zzz3,zzz4)
+
+zzzz1 := -30
+zzzz2 := -030.5
+zzzz3 := 3
+zzzz4 := 4
+
+procspecmainq(zzzz1,zzzz2,zzzz3,zzzz4)
+
+zzzzz1 := -40
+zzzzz2 := -040.5
+zzzzz3 := 3
+zzzzz4 := 4
+
+procspecmainq(zzzzz1,zzzzz2,zzzzz3,zzzzz4)
+
+zzzzzz1 := -50
+zzzzzz2 := -050.5
+zzzzzz3 := 3
+zzzzzz4 := 4
+
+procspecmainq(zzzzzz1,zzzzzz2,zzzzzz3,zzzzzz4)
+
+zzzzzzz1 := -60
+zzzzzzz2 := -060.5
+zzzzzzz3 := 3
+zzzzzzz4 := 4
+
+procspecmainq(zzzzzzz1,zzzzzzz2,zzzzzzz3,zzzzzzz4)
+
+zzzzzzzz1 := -70
+zzzzzzzz2 := -070.5
+zzzzzzzz3 := 3
+zzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzz1,zzzzzzzz2,zzzzzzzz3,zzzzzzzz4)
+
+zzzzzzzzz1 := -80
+zzzzzzzzz2 := -080.5
+zzzzzzzzz3 := 3
+zzzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzzz1,zzzzzzzzz2,zzzzzzzzz3,zzzzzzzzz4)
+
+zzzzzzzzzz1 := -90
+zzzzzzzzzz2 := -090.5
+zzzzzzzzzz3 := 3
+zzzzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzzzz1,zzzzzzzzzz2,zzzzzzzzzz3,zzzzzzzzzz4)
+
+zzzzzzzzzzz1 := -100
+zzzzzzzzzzz2 := -100.5
+zzzzzzzzzzz3 := 3
+zzzzzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzzzzz1,zzzzzzzzzzz2,zzzzzzzzzzz3,zzzzzzzzzzz4)
+
+zzzzzzzzzzzz1 := -110
+zzzzzzzzzzzz2 := -110.5
+zzzzzzzzzzzz3 := 3
+zzzzzzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzzzzzz1,zzzzzzzzzzzz2,zzzzzzzzzzzz3,zzzzzzzzzzzz4)
+
+zzzzzzzzzzzzz1 := -120
+zzzzzzzzzzzzz2 := -120.5
+zzzzzzzzzzzzz3 := 3
+zzzzzzzzzzzzz4 := 4
+
+procspecmainq(zzzzzzzzzzzzz1,zzzzzzzzzzzzz2,zzzzzzzzzzzzz3,zzzzzzzzzzzzz4)
+
+#1949
+#texskysphere05()
+
+end
+
+#############################################
+
+#right side
+
+procedure procspecmainq(z1,z2,z3,z4)
+
+px := 17.5
+py := -14.5
+pz := z1
+pxx := 35.9
+pyy := .05
+pzz := .05
+tex := 1
+r := 38.78
+
+cylspec01(px,py,pz,pxx,pyy,pzz,tex,r)
+
+zpx := 13.5 
+zpy := -9.1
+zpz := z1
+zpxx := 32.25
+zpyy := .05
+zpzz := .05
+ztex := 1
+rr := 29.74
+
+cylspec01(zpx,zpy,zpz,zpxx,zpyy,zpzz,ztex,rr)
+
+#left side
+
+qpx := -13.5
+qpy := -9.1
+qpz := z1
+qpxx := 32.25
+qpyy := .05
+qpzz := .05
+qtex := 1
+qr := -29.74
+
+cylspec01(qpx,qpy,qpz,qpxx,qpyy,qpzz,qtex,qr)
+
+qzpx := -17.5
+qzpy := -14.5 
+qzpz := z1
+qzpxx := 35.9
+qzpyy := .05
+qzpzz := .05
+qztex := 1
+qrr := -38.78
+
+cylspec01(qzpx,qzpy,qzpz,qzpxx,qzpyy,qzpzz,qztex,qrr)
+
+#web right side ###########################################################
+
+xpx := 16
+xpy := 0 
+xpz := z1
+xpxx := 8 
+xpyy := .05
+xpzz := .05
+xtex := 2
+xrr := 0
+
+cylspec01(xpx,xpy,xpz,xpxx,xpyy,xpzz,xtex,xrr)
+
+xxpx := -8 # ^-v
+xxpy := 11 # <->
+xxpz := z1
+xxpxx := 5 
+xxpyy := .05
+xxpzz := .05
+xxtex := 2
+xxrr := -90
+
+cylspec01(xxpx,xxpy,xxpz,xxpxx,xxpyy,xxpzz,xxtex,xxrr)
+
+xxxpx := 11
+xxxpy := 8 
+xxxpz := z1
+xxxpxx := 6.25 
+xxxpyy := .05
+xxxpzz := .05
+xxxtex := 2
+xxxrr := 0
+
+cylspec01(xxxpx,xxxpy,xxxpz,xxxpxx,xxxpyy,xxxpzz,xxxtex,xxxrr)
+
+xxxxpx := -14.25  # ^-v
+xxxxpy := 7.5 # <->
+xxxxpz := z1
+xxxxpxx := 3.5 
+xxxxpyy := .05
+xxxxpzz := .05
+xxxxtex := 2
+xxxxrr := -90
+
+cylspec01(xxxxpx,xxxxpy,xxxxpz,xxxxpxx,xxxxpyy,xxxxpzz,xxxxtex,xxxxrr)
+
+xxxxxpx := 7.50
+xxxxxpy := 14.10
+xxxxxpz := z1
+xxxxxpxx := 4.5 
+xxxxxpyy := .05
+xxxxxpzz := .05
+xxxxxtex := 2
+xxxxxrr := 0
+
+cylspec01(xxxxxpx,xxxxxpy,xxxxxpz,xxxxxpxx,xxxxxpyy,xxxxxpzz,xxxxxtex,xxxxxrr)
+
+xxxxxxpx := -18.5  # ^-v
+xxxxxxpy := 5 # <->
+xxxxxxpz := z1
+xxxxxxpxx := 2.5 
+xxxxxxpyy := .05
+xxxxxxpzz := .05
+xxxxxxtex := 2
+xxxxxxrr := -90
+
+cylspec01(xxxxxxpx,xxxxxxpy,xxxxxxpz,xxxxxxpxx,xxxxxxpyy,xxxxxxpzz,xxxxxxtex,xxxxxxrr)
+
+xxxxxxxpx := 5
+xxxxxxxpy := 18.5
+xxxxxxxpz := z1
+xxxxxxxpxx := 3 
+xxxxxxxpyy := .05
+xxxxxxxpzz := .05
+xxxxxxxtex := 2
+xxxxxxxrr := 0
+
+cylspec01(xxxxxxxpx,xxxxxxxpy,xxxxxxxpz,xxxxxxxpxx,xxxxxxxpyy,xxxxxxxpzz,xxxxxxxtex,xxxxxxxrr)
+
+xxxxxxxxpx := -21.5  # ^-v
+xxxxxxxxpy := 3.3 # <->
+xxxxxxxxpz := z1
+xxxxxxxxpxx := 1.75 
+xxxxxxxxpyy := .05
+xxxxxxxxpzz := .05
+xxxxxxxxtex := 2
+xxxxxxxxrr := -90
+
+cylspec01(xxxxxxxxpx,xxxxxxxxpy,xxxxxxxxpz,xxxxxxxxpxx,xxxxxxxxpyy,xxxxxxxxpzz,xxxxxxxxtex,xxxxxxxxrr)
+
+xxxxxxxxxpx := 3.25
+xxxxxxxxxpy := 21.5
+xxxxxxxxxpz := z1
+xxxxxxxxxpxx := 2.25 
+xxxxxxxxxpyy := .05
+xxxxxxxxxpzz := .05
+xxxxxxxxxtex := 2
+xxxxxxxxxrr := 0
+
+cylspec01(xxxxxxxxxpx,xxxxxxxxxpy,xxxxxxxxxpz,xxxxxxxxxpxx,xxxxxxxxxpyy,xxxxxxxxxpzz,xxxxxxxxxtex,xxxxxxxxxrr)
+
+xxxxxxxxxxpx := -23.75  # ^-v
+xxxxxxxxxxpy := 2 # <->
+xxxxxxxxxxpz := z1
+xxxxxxxxxxpxx := 1.25 
+xxxxxxxxxxpyy := .05
+xxxxxxxxxxpzz := .05
+xxxxxxxxxxtex := 2
+xxxxxxxxxxrr := -90
+
+cylspec01(xxxxxxxxxxpx,xxxxxxxxxxpy,xxxxxxxxxxpz,xxxxxxxxxxpxx,xxxxxxxxxxpyy,xxxxxxxxxxpzz,xxxxxxxxxxtex,xxxxxxxxxxrr)
+
+xxxxxxxxxxxpx := 2
+xxxxxxxxxxxpy := 23.75
+xxxxxxxxxxxpz := z1
+xxxxxxxxxxxpxx := 1.7 #1.8
+xxxxxxxxxxxpyy := .05
+xxxxxxxxxxxpzz := .05
+xxxxxxxxxxxtex := 2
+xxxxxxxxxxxrr := 0
+
+cylspec01(xxxxxxxxxxxpx,xxxxxxxxxxxpy,xxxxxxxxxxxpz,xxxxxxxxxxxpxx,xxxxxxxxxxxpyy,xxxxxxxxxxxpzz,xxxxxxxxxxxtex,xxxxxxxxxxxrr)
+
+xxxxxxxxxxxxpx := -25.5  # ^-v  
+xxxxxxxxxxxxpy := 1.05 # <->
+xxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxpxx := .90
+xxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxrr := -90
+
+cylspec01(xxxxxxxxxxxxpx,xxxxxxxxxxxxpy,xxxxxxxxxxxxpz,xxxxxxxxxxxxpxx,xxxxxxxxxxxxpyy,xxxxxxxxxxxxpzz,xxxxxxxxxxxxtex,xxxxxxxxxxxxrr)
+
+xxxxxxxxxxxxxpx := 1
+xxxxxxxxxxxxxpy := 25.5
+xxxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxxpxx := 1.2 
+xxxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxxrr := 0
+
+cylspec01(xxxxxxxxxxxxxpx,xxxxxxxxxxxxxpy,xxxxxxxxxxxxxpz,xxxxxxxxxxxxxpxx,xxxxxxxxxxxxxpyy,xxxxxxxxxxxxxpzz,xxxxxxxxxxxxxtex,xxxxxxxxxxxxxrr)
+
+xxxxxxxxxxxxxxpx := -26.7  # ^-v  
+xxxxxxxxxxxxxxpy := .34 # <-> 
+xxxxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxxxpxx := .64
+xxxxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxxxrr := -90
+
+cylspec01(xxxxxxxxxxxxxxpx,xxxxxxxxxxxxxxpy,xxxxxxxxxxxxxxpz,xxxxxxxxxxxxxxpxx,xxxxxxxxxxxxxxpyy,xxxxxxxxxxxxxxpzz,xxxxxxxxxxxxxxtex,xxxxxxxxxxxxxxrr)
+
+#web left side###########################################################
+
+xpx := -16
+xpy := 0 
+xpz := z1
+xpxx := 8 #8.5
+xpyy := .05
+xpzz := .05
+xtex := 2
+xrr := 0
+
+cylspec02(xpx,xpy,xpz,xpxx,xpyy,xpzz,xtex,xrr)
+
+xxpx := -8 # ^-v
+xxpy := -16 # <->   #-11
+xxpz := z1
+xxpxx := 5 #8.5
+xxpyy := .05
+xxpzz := .05
+xxtex := 2
+xxrr := -90
+
+cylspec02(xxpx,xxpy,xxpz,xxpxx,xxpyy,xxpzz,xxtex,xxrr)
+
+xxxpx := -11
+xxxpy := 8 
+xxxpz := z1
+xxxpxx := 6.25 
+xxxpyy := .05
+xxxpzz := .05
+xxxtex := 2
+xxxrr := 0
+
+cylspec02(xxxpx,xxxpy,xxxpz,xxxpxx,xxxpyy,xxxpzz,xxxtex,xxxrr)
+
+xxxxpx := -14.25  #-14.25 ^-v
+xxxxpy := -11 #7.5 <->
+xxxxpz := z1
+xxxxpxx := 3.5 #8.5
+xxxxpyy := .05
+xxxxpzz := .05
+xxxxtex := 2
+xxxxrr := -90
+
+cylspec02(xxxxpx,xxxxpy,xxxxpz,xxxxpxx,xxxxpyy,xxxxpzz,xxxxtex,xxxxrr)
+
+xxxxxpx := -7.50
+xxxxxpy := 14.10
+xxxxxpz := z1
+xxxxxpxx := 4.5 
+xxxxxpyy := .05
+xxxxxpzz := .05
+xxxxxtex := 2
+xxxxxrr := 0
+
+cylspec02(xxxxxpx,xxxxxpy,xxxxxpz,xxxxxpxx,xxxxxpyy,xxxxxpzz,xxxxxtex,xxxxxrr)
+
+xxxxxxpx := -18.5  # ^-v
+xxxxxxpy := -7.50 # 5 <->
+xxxxxxpz := z1
+xxxxxxpxx := 2.5 
+xxxxxxpyy := .05
+xxxxxxpzz := .05
+xxxxxxtex := 2
+xxxxxxrr := -90
+
+cylspec02(xxxxxxpx,xxxxxxpy,xxxxxxpz,xxxxxxpxx,xxxxxxpyy,xxxxxxpzz,xxxxxxtex,xxxxxxrr)
+
+xxxxxxxpx := -5
+xxxxxxxpy := 18.5
+xxxxxxxpz := z1
+xxxxxxxpxx := 3 
+xxxxxxxpyy := .05
+xxxxxxxpzz := .05
+xxxxxxxtex := 2
+xxxxxxxrr := 0
+
+cylspec02(xxxxxxxpx,xxxxxxxpy,xxxxxxxpz,xxxxxxxpxx,xxxxxxxpyy,xxxxxxxpzz,xxxxxxxtex,xxxxxxxrr)
+
+xxxxxxxxpx := -21.5  # ^-v
+xxxxxxxxpy := -5 # 3.3<->
+xxxxxxxxpz := z1
+xxxxxxxxpxx := 1.75 
+xxxxxxxxpyy := .05
+xxxxxxxxpzz := .05
+xxxxxxxxtex := 2
+xxxxxxxxrr := -90
+
+cylspec02(xxxxxxxxpx,xxxxxxxxpy,xxxxxxxxpz,xxxxxxxxpxx,xxxxxxxxpyy,xxxxxxxxpzz,xxxxxxxxtex,xxxxxxxxrr)
+
+xxxxxxxxxpx := -3.25
+xxxxxxxxxpy := 21.5
+xxxxxxxxxpz := z1
+xxxxxxxxxpxx := 2.25 
+xxxxxxxxxpyy := .05
+xxxxxxxxxpzz := .05
+xxxxxxxxxtex := 2
+xxxxxxxxxrr := 0
+
+cylspec02(xxxxxxxxxpx,xxxxxxxxxpy,xxxxxxxxxpz,xxxxxxxxxpxx,xxxxxxxxxpyy,xxxxxxxxxpzz,xxxxxxxxxtex,xxxxxxxxxrr)
+
+xxxxxxxxxxpx := -23.75  # ^-v
+xxxxxxxxxxpy := -3.25 # 2 <->
+xxxxxxxxxxpz := z1
+xxxxxxxxxxpxx := 1.25 
+xxxxxxxxxxpyy := .05
+xxxxxxxxxxpzz := .05
+xxxxxxxxxxtex := 2
+xxxxxxxxxxrr := -90
+
+cylspec02(xxxxxxxxxxpx,xxxxxxxxxxpy,xxxxxxxxxxpz,xxxxxxxxxxpxx,xxxxxxxxxxpyy,xxxxxxxxxxpzz,xxxxxxxxxxtex,xxxxxxxxxxrr)
+
+xxxxxxxxxxxpx := -2
+xxxxxxxxxxxpy := 23.75
+xxxxxxxxxxxpz := z1
+xxxxxxxxxxxpxx := 1.7 #1.8
+xxxxxxxxxxxpyy := .05
+xxxxxxxxxxxpzz := .05
+xxxxxxxxxxxtex := 2
+xxxxxxxxxxxrr := 0
+
+cylspec02(xxxxxxxxxxxpx,xxxxxxxxxxxpy,xxxxxxxxxxxpz,xxxxxxxxxxxpxx,xxxxxxxxxxxpyy,xxxxxxxxxxxpzz,xxxxxxxxxxxtex,xxxxxxxxxxxrr)
+
+xxxxxxxxxxxxpx := -25.5  # ^-v  #-25.3
+xxxxxxxxxxxxpy := -2 # 1.05<->
+xxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxpxx := .90
+xxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxrr := -90
+
+cylspec02(xxxxxxxxxxxxpx,xxxxxxxxxxxxpy,xxxxxxxxxxxxpz,xxxxxxxxxxxxpxx,xxxxxxxxxxxxpyy,xxxxxxxxxxxxpzz,xxxxxxxxxxxxtex,xxxxxxxxxxxxrr)
+
+xxxxxxxxxxxxxpx := -1
+xxxxxxxxxxxxxpy := 25.5
+xxxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxxpxx := 1.2 #1.8
+xxxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxxrr := 0
+
+cylspec02(xxxxxxxxxxxxxpx,xxxxxxxxxxxxxpy,xxxxxxxxxxxxxpz,xxxxxxxxxxxxxpxx,xxxxxxxxxxxxxpyy,xxxxxxxxxxxxxpzz,xxxxxxxxxxxxxtex,xxxxxxxxxxxxxrr)
+
+
+xxxxxxxxxxxxxxpx := -26.7  # ^-v  #-25.3
+xxxxxxxxxxxxxxpy := -1 # <-> #.34
+xxxxxxxxxxxxxxpz := z1
+xxxxxxxxxxxxxxpxx := .64
+xxxxxxxxxxxxxxpyy := .05
+xxxxxxxxxxxxxxpzz := .05
+xxxxxxxxxxxxxxtex := 2
+xxxxxxxxxxxxxxrr := -90
+
+cylspec02(xxxxxxxxxxxxxxpx,xxxxxxxxxxxxxxpy,xxxxxxxxxxxxxxpz,xxxxxxxxxxxxxxpxx,xxxxxxxxxxxxxxpyy,xxxxxxxxxxxxxxpzz,xxxxxxxxxxxxxxtex,xxxxxxxxxxxxxxrr)
+
+################################################################
+#LATERAL BRACES right side
+
+qqpx := 7.5  # ^-v 
+qqpy := -z1 # <->
+qqpz := 18.61 
+qqpxx := 10 
+qqpyy := .05
+qqpzz := .05
+qqtex := 1
+qqrr := -90
+
+cylspec03(qqpx,qqpy,qqpz,qqpxx,qqpyy,qqpzz,qqtex,qqrr)
+
+qqqpx := .25  # ^-v 
+qqqpy := -z1 # <->
+qqqpz := 27.63 
+qqqpxx := 10
+qqqpyy := .05
+qqqpzz := .05
+qqqtex := 1
+qqqrr := -90
+
+cylspec03(qqqpx,qqqpy,qqqpz,qqqpxx,qqqpyy,qqqpzz,qqqtex,qqqrr)
+
+qqqqpx := 17.5
+qqqqpy := 9.8#-18.61
+qqqqpz := (z1 + -5)
+qqqqpxx := 11.6
+qqqqpyy := .05
+qqqqpzz := .05
+qqqqtex := 1
+qqqqr := 38.78
+
+cylspec02(qqqqpx,qqqqpy,qqqqpz,qqqqpxx,qqqqpyy,qqqqpzz,qqqqtex,qqqqr)
+
+#********************************************************************************
+
+################################################################
+#LATERAL BRACES LEFT side
+
+lqqpx := -7.5  # ^-v 
+lqqpy := -z1 # <->
+lqqpz := 18.61 
+lqqpxx := 10 
+lqqpyy := .05
+lqqpzz := .05
+lqqtex := 1
+lqqrr := -90
+
+cylspec03(lqqpx,lqqpy,lqqpz,lqqpxx,lqqpyy,lqqpzz,lqqtex,lqqrr)
+
+lqqqpx := -.25  # ^-v 
+lqqqpy := -z1 # <->
+lqqqpz := 27.63 
+lqqqpxx := 10
+lqqqpyy := .05
+lqqqpzz := .05
+lqqqtex := 1
+lqqqrr := -90
+
+cylspec03(lqqqpx,lqqqpy,lqqqpz,lqqqpxx,lqqqpyy,lqqqpzz,lqqqtex,lqqqrr)
+
+lqqqqpx := -17.5
+lqqqqpy := 9.8#-18.61
+lqqqqpz := (z1 + -5)
+lqqqqpxx := 11.6
+lqqqqpyy := .05
+lqqqqpzz := .05
+lqqqqtex := 1
+lqqqqr := -38.78
+
+cylspec02(lqqqqpx,lqqqqpy,lqqqqpz,lqqqqpxx,lqqqqpyy,lqqqqpzz,lqqqqtex,lqqqqr)
+
+
+################################################################
+#********************************************************************************
+#diagonals r
+
+#diagonal1
+
+qqqqqpx := (13.6 - z3)
+qqqqqpy := (6.8 - z4)
+qqqqqpz := (z1 + -14.1)#zzz1 := -10
+qqqqqpxx := 11
+qqqqqpyy := .05
+qqqqqpzz := .05
+qqqqqtex := 1
+qqqqqr := 32
+qqqqqr2 := 34.1
+
+#cylspec04(qqqqqpx,qqqqqpy,qqqqqpz,qqqqqpxx,qqqqqpyy,qqqqqpzz,qqqqqtex,qqqqqr,qqqqqr2)
+
+#diagonal2
+
+qqqqqqpx := 17.5
+qqqqqqpy := 11
+qqqqqqpz := (z1 + 5.8) #0)
+qqqqqqpxx := 11
+qqqqqqpyy := .05
+qqqqqqpzz := .05
+qqqqqqtex := 1
+qqqqqqr := -32
+qqqqqr2 := 38.7
+
+#cylspec04(qqqqqqpx,qqqqqqpy,qqqqqqpz,qqqqqqpxx,qqqqqqpyy,qqqqqqpzz,qqqqqqtex,qqqqqqr,qqqqqr2)
+
+#********************************************************************************
+
+#diagonals left
+
+#diagonal3
+
+lqqqqqpx := -13.6
+lqqqqqpy := 6.8
+lqqqqqpz := (z1 + -14.1)
+lqqqqqpxx := 11
+lqqqqqpyy := .05
+lqqqqqpzz := .05
+lqqqqqtex := 1
+lqqqqqr := 32
+lqqqqqr2 := -34.1
+
+#cylspec04(lqqqqqpx,lqqqqqpy,lqqqqqpz,lqqqqqpxx,lqqqqqpyy,lqqqqqpzz,lqqqqqtex,lqqqqqr,lqqqqqr2)
+
+#diagonal4
+
+lqqqqqqpx := 17.5
+lqqqqqqpy := 11
+lqqqqqqpz := (z1 + 5.10)#5.8
+lqqqqqqpxx := 11
+lqqqqqqpyy := .05
+lqqqqqqpzz := .05
+lqqqqqqtex := 1
+lqqqqqqr := 32
+lqqqqqr2 := -34.1
+
+#cylspec04(lqqqqqqpx,lqqqqqqpy,lqqqqqqpz,lqqqqqqpxx,lqqqqqqpyy,lqqqqqqpzz,lqqqqqqtex,lqqqqqqr,lqqqqqr2)
+
+################################################################
+
+#front cap
+
+WAttrib("texcoord=auto","texmode=on")
+
+#Texcoord(0.5,0.1,0.5,0.0,0.6,0.0,0.6,0.1) 
+                                                
+WAttrib("texture="||"8"||".png")                                                                            
+FillPolygon(-.40,27.8,.1,.40,27.8,.1,.22,26.6,.1,-.22,26.6,.1)
+
+WAttrib("texmode=off") 
+
+#rside
+
+
+#WAttrib("texcoord=auto","texmode=on")
+
+WAttrib("texmode=on")
+
+Texcoord(1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0) 
+
+WAttrib("texture="||"9"||".png")                                                                           
+FillPolygon(.40,27.8,.1,.40,27.8,-20,.22,26.6,-20,.22,26.6,.1)
+
+FillPolygon(.40,27.8,-20,.40,27.8,-40,.22,26.6,-40,.22,26.6,-20)    
+
+FillPolygon(.40,27.8,-40,.40,27.8,-60,.22,26.6,-60,.22,26.6,-40)  
+
+FillPolygon(.40,27.8,-60,.40,27.8,-80,.22,26.6,-80,.22,26.6,-60) 
+
+FillPolygon(.40,27.8,-80,.40,27.8,-110,.22,26.6,-110,.22,26.6,-80)
+
+FillPolygon(.40,27.8,-110,.40,27.8,-120,.22,26.6,-120,.22,26.6,-110)  
+
+WAttrib("texmode=off") 
+
+
+
+#lside
+
+WAttrib("texcoord=auto","texmode=on")
+
+Texcoord(1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0) 
+
+WAttrib("texture="||"10"||".png") 
+
+FillPolygon(-.40,27.8,.1,-.40,27.8,-20,-.22,26.6,-20,-.22,26.6,.1) 
+
+FillPolygon(-.40,27.8,-20,-.40,27.8,-40,-.22,26.6,-40,-.22,26.6,-20)    
+
+FillPolygon(-.40,27.8,-40,-.40,27.8,-60,-.22,26.6,-60,-.22,26.6,-40)  
+
+FillPolygon(-.40,27.8,-60,-.40,27.8,-80,-.22,26.6,-80,-.22,26.6,-60) 
+
+FillPolygon(-.40,27.8,-80,-.40,27.8,-110,-.22,26.6,-110,-.22,26.6,-80)
+
+FillPolygon(-.40,27.8,-110,-.40,27.8,-120,-.22,26.6,-120,-.22,26.6,-110)                                                                       
+WAttrib("texmode=off") 
+
+
+
+#bottom
+
+WAttrib("texcoord=auto","texmode=on")
+
+Texcoord(1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0) 
+
+WAttrib("texture="||"12"||".png")                                                                           
+FillPolygon(-.22,26.6,.1,-.22,26.6,-20,.22,26.6,-20,.22,26.6,.1)
+
+FillPolygon(-.22,26.6,-20,-.22,26.6,-40,.22,26.6,-40,.22,26.6,-20)
+
+FillPolygon(-.22,26.6,-40,-.22,26.6,-60,.22,26.6,-60,.22,26.6,-40)
+
+FillPolygon(-.22,26.6,-60,-.22,26.6,-80,.22,26.6,-80,.22,26.6,-60)
+
+FillPolygon(-.22,26.6,-80,-.22,26.6,-110,.22,26.6,-110,.22,26.6,-80)
+
+FillPolygon(-.22,26.6,-110,-.22,26.6,-120,.22,26.6,-120,.22,26.6,-110)
+
+WAttrib("texmode=off") 
+
+
+
+#top
+
+WAttrib("texcoord=auto","texmode=on")
+
+Texcoord(1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0)
+
+WAttrib("texture="||"11"||".png")                                                                           
+FillPolygon(-.40,27.8,.1,-.40,27.8,-20,.40,27.8,-20,.40,27.8,.1)
+
+FillPolygon(-.40,27.8,-20,-.40,27.8,-40,.40,27.8,-40,.40,27.8,-20)
+
+FillPolygon(-.40,27.8,-40,-.40,27.8,-60,.40,27.8,-60,.40,27.8,-40)
+
+FillPolygon(-.40,27.8,-60,-.40,27.8,-80,.40,27.8,-80,.40,27.8,-60)
+
+FillPolygon(-.40,27.8,-80,-.40,27.8,-110,.40,27.8,-110,.40,27.8,-80)
+
+FillPolygon(-.40,27.8,-110,-.40,27.8,-120,.40,27.8,-120,.40,27.8,-110)
+
+WAttrib("texmode=off") 
+
+
+
+###################################################################
+
+#piers right
+
+#tpcubemain012(017,-013.5,z2)#bingo
+
+#tpcubemain013(013,-7.25,z2)#adjust...bo for diff angle
+
+tpcubemain014(-018,-013.5,z2)#bingo -017
+
+tpcubemain015(-14,-7.25,z2)#adjust...bo for diff angle
+
+
+
+################################################################
+
+#piers left
+
+#tpcubemain013(012,-009.5,-000.5)#adjust...bo for diff angle
+
+#tpcubemain013(0,10,-000.5)#adjust...bo for diff angle
+
+tpcubemain012(017,-013.5,z2)#bingo
+
+tpcubemain013(013,-7.25,z2)#adjust...bo for diff angle
+
+end
+
+####################################################################
+
+procedure cylspec02(px,py,pz,pxx,pyy,pzz,tex,rr)
+
+WAttrib("texcoord=auto","texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(rr,0.0,0.0,1.0)
+  
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+################################################################
+
+procedure cylspec01(px,py,pz,pxx,pyy,pzz,tex,rr)
+
+WAttrib("texcoord=auto","texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(rr,0.0,0.0,1.0)
+  
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+################################################################
+
+procedure cylspec03(px,py,pz,pxx,pyy,pzz,tex,rr)
+
+WAttrib("texcoord=auto","texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(rr,1.0,0.0,0.0)
+  
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+################################################################
+
+procedure cylspec04(px,py,pz,pxx,pyy,pzz,tex,rr,rrr)
+
+WAttrib("texcoord=auto","texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+WAttrib( "slices=45", "rings=45" )
+
+PushMatrix()
+
+Rotate(rr,1.0,0.0,0.0)
+Rotate(rrr,0.0,0.0,1.0)
+  
+DrawCylinder(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz)
+
+PopMatrix()
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+################################################################
+
+
+procedure texcubein2(at)
+
+  (ax := at[1],bx := at[2],cx := at[3])
+  (dx := at[4],ex := at[5],fx := at[6])
+  (gx := at[7],hx := at[8],ix := at[9])
+
+  x := (ax||bx||cx)  
+  y := (dx||ex||fx) 
+  z := (gx||hx||ix) 
+
+ tpcubemain012(x,y,z)
+
+end
+
+procedure tpcubemain012(xa1,ya1,za1)
+
+  xa2 := xa1
+  ya2 := ya1
+  za2 := (za1 + 1)
+
+  xa3 := xa1
+  ya3 := (ya1 - 1)
+  za3 := (za1 + 1)
+
+  xa4 := xa1
+  ya4 := (ya1 - 1)
+  za4 := za1
+
+  xb2 := (xa1 + 1)
+  yb2 := ya1
+  zb2 := za1
+
+  xb3 := (xa1 + 1)
+  yb3 := ya1
+  zb3 := (za1 + 1)
+
+  xb4 := (xa1 + 1)
+  yb4 := (ya1 - 1)
+  zb4 := (za1 + 1)
+
+  tcplane_a2(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)#left side
+
+  tcplane_b2(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)#top
+
+  tcplane_c2(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3)#front 
+
+  tcplane_d2(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4)#right side
+
+  tcplane_e2(xa1,ya1,za1,xb3,ya1,za1,xb3,ya4,za4,xa4,ya4,za4)#back 
+
+  tcplane_f2(xa4,ya4,za4,xb3,ya4,za4,xb3,ya3,za3,xa3,ya3,za3)#bottom  
+
+end
+
+
+procedure tcplane_a2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=3.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+  
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_b2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=4.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_c2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=5.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_d2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=6.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_e2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=7.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_f2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=7.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+
+
+procedure texcubeinx2(va,vb,vc,vd,ve,vf,vg,vh,vi)
+
+    #these parameters can be changed to create voxel-type arrays
+
+    q := [ve,vf,vg,vh,vi] 
+
+    every i := va to vc by 1 do {
+    every o := vb to vd by 1 do {
+       
+        tpcubemain012(i,?q,o)
+
+  }
+} 
+  
+
+WAttrib("texmode=off") 
+
+return()
+
+end 
+
+###############################################################
+
+################################################################
+
+
+procedure texcubein3(at)
+
+  (ax := at[1],bx := at[2],cx := at[3])
+  (dx := at[4],ex := at[5],fx := at[6])
+  (gx := at[7],hx := at[8],ix := at[9])
+
+  x := (ax||bx||cx)  
+  y := (dx||ex||fx) 
+  z := (gx||hx||ix) 
+
+ tpcubemain013(x,y,z)
+
+end
+
+procedure tpcubemain013(xa1,ya1,za1)
+
+  xa2 := xa1
+  ya2 := ya1
+  za2 := (za1 + 1)
+
+  xa3 := xa1
+  ya3 := (ya1 - 1)
+  za3 := (za1 + 1)
+
+  xa4 := xa1
+  ya4 := (ya1 - 1)
+  za4 := za1
+
+  xb2 := (xa1 + 1)
+  yb2 := ya1
+  zb2 := za1
+
+  xb3 := (xa1 + 1)
+  yb3 := ya1
+  zb3 := (za1 + 1)
+
+  xb4 := (xa1 + 1)
+  yb4 := (ya1 - 1)
+  zb4 := (za1 + 1)
+
+  tcplane_a3(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)#left side
+
+  tcplane_b3(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)#top
+
+  tcplane_c3(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3)#front 
+
+  tcplane_d3(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4)#right side
+
+  tcplane_e3(xa1,ya1,za1,xb3,ya1,za1,xb3,ya4,za4,xa4,ya4,za4)#back 
+
+  tcplane_f3(xa4,ya4,za4,xb3,ya4,za4,xb3,ya3,za3,xa3,ya3,za3)#bottom  
+
+end
+
+
+procedure tcplane_a3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=3.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+  
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_b3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=4.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_c3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=5.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_d3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=6.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_e3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=7.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_f3(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=7.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure texcubeinx3(va,vb,vc,vd,ve,vf,vg,vh,vi)
+
+    #these parameters can be changed to create voxel-type arrays
+
+    q := [ve,vf,vg,vh,vi] 
+
+    every i := va to vc by 1 do {
+    every o := vb to vd by 1 do {
+       
+        tpcubemain013(i,?q,o)
+
+  }
+} 
+  
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+
+
+################################################################
+
+procedure tpcubemain014(xa1,ya1,za1)
+
+  xa2 := xa1
+  ya2 := ya1
+  za2 := (za1 + 1)
+
+  xa3 := xa1
+  ya3 := (ya1 - 1)
+  za3 := (za1 + 1)
+
+  xa4 := xa1
+  ya4 := (ya1 - 1)
+  za4 := za1
+
+  xb2 := (xa1 + 1)
+  yb2 := ya1
+  zb2 := za1
+
+  xb3 := (xa1 + 1)
+  yb3 := ya1
+  zb3 := (za1 + 1)
+
+  xb4 := (xa1 + 1)
+  yb4 := (ya1 - 1)
+  zb4 := (za1 + 1)
+
+  tcplane_a24(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)#left side
+
+  tcplane_b24(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)#top
+
+  tcplane_c24(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3)#front 
+
+  tcplane_d24(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4)#right side
+
+  tcplane_e24(xa1,ya1,za1,xb3,ya1,za1,xb3,ya4,za4,xa4,ya4,za4)#back 
+
+  tcplane_f24(xa4,ya4,za4,xb3,ya4,za4,xb3,ya3,za3,xa3,ya3,za3)#bottom  
+
+end
+
+
+procedure tcplane_a24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=33.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+  
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_b24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=44.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_c24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=55.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_d24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=66.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_e24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=77.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_f24(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=77.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-38.78,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+
+################################################################
+
+procedure tpcubemain015(xa1,ya1,za1)
+
+  xa2 := xa1
+  ya2 := ya1
+  za2 := (za1 + 1)
+
+  xa3 := xa1
+  ya3 := (ya1 - 1)
+  za3 := (za1 + 1)
+
+  xa4 := xa1
+  ya4 := (ya1 - 1)
+  za4 := za1
+
+  xb2 := (xa1 + 1)
+  yb2 := ya1
+  zb2 := za1
+
+  xb3 := (xa1 + 1)
+  yb3 := ya1
+  zb3 := (za1 + 1)
+
+  xb4 := (xa1 + 1)
+  yb4 := (ya1 - 1)
+  zb4 := (za1 + 1)
+
+  tcplane_a35(xa1,ya1,za1,xa2,ya2,za2,xa3,ya3,za3,xa4,ya4,za4)#left side
+
+  tcplane_b35(xa1,ya1,za1,xb2,yb2,zb2,xb3,yb3,zb3,xa2,ya2,za2)#top
+
+  tcplane_c35(xa2,ya2,za2,xb3,yb3,zb3,xb4,yb4,zb4,xa3,ya3,za3)#front 
+
+  tcplane_d35(xb3,ya1,za1,xb3,ya2,za2,xb3,ya3,za3,xb3,ya4,za4)#right side
+
+  tcplane_e35(xa1,ya1,za1,xb3,ya1,za1,xb3,ya4,za4,xa4,ya4,za4)#back 
+
+  tcplane_f35(xa4,ya4,za4,xb3,ya4,za4,xb3,ya3,za3,xa3,ya3,za3)#bottom  
+
+end
+
+
+procedure tcplane_a35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=33.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+
+FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+  
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_b35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=44.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_c35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=55.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_d35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=66.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_e35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=77.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+procedure tcplane_f35(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+  WAttrib("texmode=on")
+
+  WAttrib("texture=77.png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+PushMatrix()
+
+Rotate(-29.74,0.0,0.0,1.0)
+
+  FillPolygon(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz)
+
+PopMatrix()
+
+ WAttrib("texmode=off")
+
+end
+
+
+
+####################################################################
+
+#dyson mesh
+
+procedure dysonmesh01()
+
+pxa:=0 #+
+pxz:=0 #+
+
+pxaa:=0 #0
+pxzz:=0 #+
+
+pxaaa:=0 #0
+pxzzz:=0 #0
+
+pxaaaa:=0 #+
+pxzzzz:=0 #0
+
+qxaa:=-0 #-
+qxzz:=0 #+
+
+qxxaa:=-0 #-
+qxxzz:=0 #0
+
+qxxxaa:=-0 #-
+qxxxzz:=-0 #-
+
+wxa:=0 #+
+wxz:=-0 #-
+
+wxaa:=0 #0
+wxzz:=-0 #-
+
+#(yx1:=2,yx2:=-2,yx3:=2,yx4:=-2,yx5:=0,yx6:=-2,yx7:=2,yx8:=-2,yx9:=2)
+
+(yx1:=0,yx2:=-0,yx3:=0,yx4:=-0,yx5:=0,yx6:=-0,yx7:=0,yx8:=-0,yx9:=0)
+
+(px:=(-5+pxa), py:=(0+yx1), pz:=(-5+pxz), pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz))
+
+(pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), qxx:=(5+qxaa), qyy:=(0+yx3), qzz:=(-5+qxzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz))
+
+(pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz), wxx:=(-5+wxa), wyy:=(0+yx7), wzz:=(5+wxz))
+
+(pxxx:=(-0+pxaaa), pyyy:=(0+yx5), pzzz:=(-0+pxzzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), qxxxx:=(5+qxxxaa), qyyyy:=(0+yx9), qzzzz:=(5+qxxxzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz))
+
+tex:=9
+
+inptexplnttt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+inptexplnttt002(pxx,pyy,pzz,qxx,qyy,qzz,qxxx,qyyy,qzzz,pxxx,pyyy,pzzz,tex)
+
+inptexplnttt003(pxxxx,pyyyy,pzzzz,pxxx,pyyy,pzzz,wx,wy,wz,wxx,wyy,wzz,tex)
+
+inptexplnttt004(pxxx,pyyy,pzzz,qxxx,qyyy,qzzz,qxxxx,qyyyy,qzzzz,wx,wy,wz,tex)
+
+
+Fg("red")
+
+DrawSphere(0,0,0,.2)
+
+DrawSphere(-5,0,0,.2)
+
+Fg("emission blue")
+
+DrawCube(0,0,0,50)
+
+#Fg("emission white")
+
+#DrawSphere(-3,6,0,.5)
+
+   #Eye(w, 10,4,19, 2,0,0, 0,3,0)
+   
+   Eye(w, 10,5,10, -0.25,0,0, 0,3,0)
+   
+   #WAttrib("light0=on, white, position 0.0, 5.0, 0.0")
+
+    Refresh()
+
+ Event()
+
+end
+
+
+
+################################################################
+                                                                                 
+procedure inptexplnttt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+Fg("green")
+
+#WAttrib("texmode=on")
+#WAttrib("texture="||(tex)||".png")
+#WAttrib("texcoord=0.0,1.0,0.0,0.9,0.10,0.9,0.10,1.0")                                  
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+#WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplnttt002(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+Fg("yellow")
+
+#WAttrib("texmode=on")
+#WAttrib("texture="||(tex)||".png")
+#WAttrib("texcoord=0.0,0.9,0.0,0.8,0.10,0.8,0.10,0.9")
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+#WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplnttt003(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+Fg("orange")
+
+#WAttrib("texmode=on")
+#WAttrib("texture="||(tex)||".png")
+#WAttrib("texcoord=0.0,0.8,0.0,0.7,0.10,0.7,0.10,0.8")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+#WAttrib("texmode=off") 
+return()
+end
+
+procedure inptexplnttt004(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+Fg("red")
+
+#WAttrib("texmode=on")
+#WAttrib("texture="||(tex)||".png")
+#WAttrib("texcoord=0.0,0.7,0.0,0.6,0.10,0.6,0.10,0.7")                                         
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+#WAttrib("texmode=off") 
+return()
+end
+
+
+
+
+####################################################################
+
+#dyson mesh
+
+procedure dysonmesh02()
+
+pxa:=1.5 #+
+pxz:=1.5 #+
+
+pxaa:=0 #0
+pxzz:=1.5 #+
+
+pxaaa:=0 #0
+pxzzz:=0 #0
+
+pxaaaa:=1.5 #+
+pxzzzz:=0 #0
+
+qxaa:=-1.5 #-
+qxzz:=1.5 #+
+
+qxxaa:=-1.5 #-
+qxxzz:=0 #0
+
+qxxxaa:=-1.5 #-
+qxxxzz:=-1.5 #-
+
+wxa:=1.5 #+
+wxz:=-1.5 #-
+
+wxaa:=0 #0
+wxzz:=-1.5 #-
+
+(yx1:=.5,yx2:=-.5,yx3:=.5,yx4:=-.5,yx5:=0,yx6:=-.5,yx7:=.5,yx8:=-.5,yx9:=.5)
+
+#(yx1:=0,yx2:=-0,yx3:=0,yx4:=-0,yx5:=0,yx6:=-0,yx7:=0,yx8:=-0,yx9:=0)
+
+(px:=(-5+pxa), py:=(0+yx1), pz:=(-5+pxz), pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz))
+
+(pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), qxx:=(5+qxaa), qyy:=(0+yx3), qzz:=(-5+qxzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz))
+
+(pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz), wxx:=(-5+wxa), wyy:=(0+yx7), wzz:=(5+wxz))
+
+(pxxx:=(-0+pxaaa), pyyy:=(0+yx5), pzzz:=(-0+pxzzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), qxxxx:=(5+qxxxaa), qyyyy:=(0+yx9), qzzzz:=(5+qxxxzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz))
+
+tex:=9
+
+inptexplnttt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+inptexplnttt002(pxx,pyy,pzz,qxx,qyy,qzz,qxxx,qyyy,qzzz,pxxx,pyyy,pzzz,tex)
+
+inptexplnttt003(pxxxx,pyyyy,pzzzz,pxxx,pyyy,pzzz,wx,wy,wz,wxx,wyy,wzz,tex)
+
+inptexplnttt004(pxxx,pyyy,pzzz,qxxx,qyyy,qzzz,qxxxx,qyyyy,qzzzz,wx,wy,wz,tex)
+
+
+Fg("red")
+
+DrawSphere(0,0,0,.2)
+
+
+DrawSphere(0,0,0,20)
+
+
+DrawSphere(-5,0,0,.2)
+
+Fg("emission blue")
+
+DrawCube(0,0,0,50)
+
+#Fg("emission white")
+
+#DrawSphere(-3,6,0,.5)
+
+   #Eye(w, 10,4,19, 2,0,0, 0,3,0)
+   
+   Eye(w, 10,5,10, -0.25,0,0, 0,3,0)
+   
+   #WAttrib("light0=on, white, position 0.0, 5.0, 0.0")
+
+    Refresh()
+
+ Event()
+
+end
+
+
+
+################################################################
+                                                                                 
+
+#dyson mesh
+
+procedure dysonmesh03()
+
+pxa:=4.5 #+
+pxz:=4.5 #+
+
+pxaa:=0 #0
+pxzz:=4.5 #+
+
+pxaaa:=0 #0
+pxzzz:=0 #0
+
+pxaaaa:=4.5 #+
+pxzzzz:=0 #0
+
+qxaa:=-4.5 #-
+qxzz:=4.5 #+
+
+qxxaa:=-4.5 #-
+qxxzz:=0 #0
+
+qxxxaa:=-4.5 #-
+qxxxzz:=-4.5 #-
+
+wxa:=4.5 #+
+wxz:=-4.5 #-
+
+wxaa:=0 #0
+wxzz:=-4.5 #-
+
+(yx1:=2,yx2:=-2,yx3:=2,yx4:=-2,yx5:=0,yx6:=-2,yx7:=2,yx8:=-2,yx9:=2)
+
+#(yx1:=0,yx2:=-0,yx3:=0,yx4:=-0,yx5:=0,yx6:=-0,yx7:=0,yx8:=-0,yx9:=0)
+
+(px:=(-5+pxa), py:=(0+yx1), pz:=(-5+pxz), pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz))
+
+(pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), qxx:=(5+qxaa), qyy:=(0+yx3), qzz:=(-5+qxzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz))
+
+(pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz), wxx:=(-5+wxa), wyy:=(0+yx7), wzz:=(5+wxz))
+
+(pxxx:=(-0+pxaaa), pyyy:=(0+yx5), pzzz:=(-0+pxzzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), qxxxx:=(5+qxxxaa), qyyyy:=(0+yx9), qzzzz:=(5+qxxxzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz))
+
+tex:=9
+
+inptexplnttt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+inptexplnttt002(pxx,pyy,pzz,qxx,qyy,qzz,qxxx,qyyy,qzzz,pxxx,pyyy,pzzz,tex)
+
+inptexplnttt003(pxxxx,pyyyy,pzzzz,pxxx,pyyy,pzzz,wx,wy,wz,wxx,wyy,wzz,tex)
+
+inptexplnttt004(pxxx,pyyy,pzzz,qxxx,qyyy,qzzz,qxxxx,qyyyy,qzzzz,wx,wy,wz,tex)
+
+
+Fg("red")
+
+DrawSphere(0,0,0,.2)
+
+DrawSphere(-5,0,0,.2)
+
+Fg("emission blue")
+
+DrawCube(0,0,0,50)
+
+#Fg("emission white")
+
+#DrawSphere(-3,6,0,.5)
+
+   #Eye(w, 10,4,19, 2,0,0, 0,3,0)
+   
+   Eye(w, 10,5,10, -0.25,0,0, 0,3,0)
+   
+   #WAttrib("light0=on, white, position 0.0, 5.0, 0.0")
+
+    Refresh()
+
+ Event()
+
+end
+
+
+
+################################################################
+
+#dyson mesh
+
+procedure dysonmesh04()
+
+pxa:=4.75 #+
+pxz:=4.75 #+
+
+pxaa:=0 #0
+pxzz:=4.75 #+
+
+pxaaa:=0 #0
+pxzzz:=0 #0
+
+pxaaaa:=4.75 #+
+pxzzzz:=0 #0
+
+qxaa:=-4.75 #-
+qxzz:=4.75 #+
+
+qxxaa:=-4.75 #-
+qxxzz:=0 #0
+
+qxxxaa:=-4.75 #-
+qxxxzz:=-4.75 #-
+
+wxa:=4.75 #+
+wxz:=-4.75 #-
+
+wxaa:=0 #0
+wxzz:=-4.75 #-
+
+(yx1:=2,yx2:=-2,yx3:=2,yx4:=-2,yx5:=0,yx6:=-2,yx7:=2,yx8:=-2,yx9:=2)
+
+#(yx1:=0,yx2:=-0,yx3:=0,yx4:=-0,yx5:=0,yx6:=-0,yx7:=0,yx8:=-0,yx9:=0)
+
+(px:=(-5+pxa), py:=(0+yx1), pz:=(-5+pxz), pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz))
+
+(pxx:=(0+pxaa), pyy:=(0+yx2), pzz:=(-5+pxzz), qxx:=(5+qxaa), qyy:=(0+yx3), qzz:=(-5+qxzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz))
+
+(pxxxx:=(-5+pxaaaa), pyyyy:=(0+yx4), pzzzz:=(0+pxzzzz), pxxx:=(0+pxaaa), pyyy:=(0+yx5), pzzz:=(0+pxzzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz), wxx:=(-5+wxa), wyy:=(0+yx7), wzz:=(5+wxz))
+
+(pxxx:=(-0+pxaaa), pyyy:=(0+yx5), pzzz:=(-0+pxzzz), qxxx:=(5+qxxaa), qyyy:=(0+yx6), qzzz:=(0+qxxzz), qxxxx:=(5+qxxxaa), qyyyy:=(0+yx9), qzzzz:=(5+qxxxzz), wx:=(0+wxaa), wy:=(0+yx8), wz:=(5+wxzz))
+
+tex:=9
+
+inptexplnttt001(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+inptexplnttt002(pxx,pyy,pzz,qxx,qyy,qzz,qxxx,qyyy,qzzz,pxxx,pyyy,pzzz,tex)
+
+inptexplnttt003(pxxxx,pyyyy,pzzzz,pxxx,pyyy,pzzz,wx,wy,wz,wxx,wyy,wzz,tex)
+
+inptexplnttt004(pxxx,pyyy,pzzz,qxxx,qyyy,qzzz,qxxxx,qyyyy,qzzzz,wx,wy,wz,tex)
+
+
+Fg("red")
+
+DrawSphere(0,0,0,.2)
+
+DrawSphere(-5,0,0,.2)
+
+Fg("emission blue")
+
+DrawCube(0,0,0,50)
+
+#Fg("emission white")
+
+#DrawSphere(-3,6,0,.5)
+
+   #Eye(w, 10,4,19, 2,0,0, 0,3,0)
+   
+   Eye(w, 10,5,10, -0.25,0,0, 0,3,0)
+   
+   #WAttrib("light0=on, white, position 0.0, 5.0, 0.0")
+
+    Refresh()
+
+ Event()
+
+end
+
+
+
+################################################################
+
+procedure dysonorbit1()
+
+dysonplane(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+
+dysonplane(10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10)
+
+dysonplane(-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12)
+
+dysonplane(-30,-18,-30,-18,-30,-18,-30,-18,-30,-18,-30,-18,-30,-18,-30,-18)
+
+dysonplane(-9,9,-9,9,-9,9,-9,9,-9,9,-9,9,-9,9,-9,9)
+
+dysonplane(-19,19,-19,19,-19,19,-19,19,-19,19,-19,19,-19,19,-19,19)
+
+#Refresh()
+
+#dysonplanebase()
+
+end
+
+procedure dysonplane(cx,cz,cxx,czz,cxxx,czzz,cxxxx,czzzz,sx,sz,sxx,szz,sxxx,szzz,sxxxx,szzzz)
+
+#WAttrib("texmode=on")
+#tex := 12
+#WAttrib("texture="||(tex)||".png")
+Fg("grey")
+DrawCylinder(-4+cx,-.15,-4+cz,.25,.05,.05)
+DrawCylinder(-4+cxx,-.15,4+czz,.25,.05,.05)
+DrawCylinder(4+cxxx,-.15,-4+czzz,.25,.05,.05)
+DrawCylinder(4+cxxxx,-.15,4+czzzz,.25,.05,.05)
+#WAttrib("texmode=off") 
+WAttrib("texmode=on")
+tex := 66 
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0") 
+(px:=(-4+sx),py:=0,pz:=(-4+sz),pxx:=(4+sxx),pyy:=0,pzz:=(-4+szz),pxxx:=(4+sxxx),pyyy:=0,pzzz:=(4+szzz),pxxxx:=(-4+sxxxx),pyyyy:=0,pzzzz:=(4+szzzz))
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+
+end
+
+procedure dysonplanebase()
+
+WAttrib("texmode=on")
+tex := 12
+WAttrib("texture="||(tex)||".png")
+DrawCylinder(-4,-.15,-4,.25,.05,.05)
+DrawCylinder(-4,-.15,4,.25,.05,.05)
+DrawCylinder(4,-.15,-4,.25,.05,.05)
+DrawCylinder(4,-.15,4,.25,.05,.05)
+WAttrib("texmode=off") 
+WAttrib("texmode=on")
+tex := 9 
+WAttrib("texture="||(tex)||".png")
+WAttrib("texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0") 
+(px:=-4,py:=0,pz:=-4,pxx:=4,pyy:=0,pzz:=-4,pxxx:=4,pyyy:=0,pzzz:=4,pxxxx:=-4,pyyyy:=0,pzzzz:=4)
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+WAttrib("texmode=off") 
+return()
+
+end
+
+#VOXW12#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+link numbers
+link wopen
+
+procedure lorenz()
+   local col, color, colorlist, cx, cy, cz, d0_x, d0_y, d0_z, d1_x
+   local d1_y, d1_z, d2_x, d2_y, d2_z, d3_x, d3_y, d3_z, dt, dt2
+   local i, old_col, old_row, old_y, row, sx, sy, sz, x, x_angle
+   local xt, y, y_angle, yt, z, z_angle, zt
+
+   x_angle  :=  rtod(45)
+   sx  :=  sin(x_angle)
+   cx  :=  cos(x_angle)
+   y_angle  :=  rtod(0)
+   sy  :=  sin(y_angle)
+   cy  :=  cos(y_angle)
+   z_angle  :=  rtod(90)
+   sz  :=  sin(z_angle)
+   cz  :=  cos(z_angle)
+
+   #WOpen("label=Lorenz", "width=640", "height=350",
+      #"fg=white", "bg=black") | stop("*** cannot open window")
+
+   colorlist := ["red", "blue", "green", "magenta", "cyan", "yellow"]
+
+   color := colorlist[1]
+
+   x  :=  0.0
+   y  :=  1.0
+   z  :=  0.0
+   old_col  :=  round(y * 9 + 320)
+   old_row  :=  round(350 - 6.56 * z)
+   dt  :=  0.01
+   dt2  :=  dt / 2
+   every i := 0 to 8000 do {
+      d0_x  :=  10 * (y-x) * dt2
+      d0_y  :=  (-x * z + 28 * x - y) * dt2
+      d0_z   :=  (x * y - 8 * z / 3) * dt2
+      xt  :=  x + d0_x
+      yt  :=  y + d0_y
+      zt  :=  z + d0_z
+      d1_x  :=  (10 * (yt-xt)) * dt2
+      d1_y  :=  (-xt * zt + 28 * xt - yt) * dt2
+      d1_z   := (xt * yt - 8 * zt / 3) * dt2
+      xt  :=  x + d1_x
+      yt  :=  y + d1_y
+      zt  :=  z + d1_z
+      d2_x  :=  (10 * (yt-xt)) * dt
+      d2_y  :=  (-xt * zt + 28 * xt - yt) * dt
+      d2_z   := (xt * yt - 8 * zt / 3) * dt
+      xt  :=  x + d2_x
+      yt  :=  y + d2_y
+      zt  :=  z + d2_z
+      d3_x  :=  (10 * (yt - xt)) * dt2
+      d3_y  :=  (-xt * zt + 28 * xt - yt) * dt2
+      d3_z  :=  (xt * yt - 8 * zt / 3) * dt2
+                     old_y  :=  y
+      x  :=  x + (d0_x + d1_x + d1_x + d2_x + d3_x) * 0.333333333
+      y  :=  y + (d0_y + d1_y + d1_y + d2_y + d3_y) * 0.333333333
+      z  :=  z +  (d0_z + d1_z + d1_z + d2_z + d3_z) * 0.333333333
+
+      col  :=  round(y * 9 + 320)
+      row  :=  round(350 - 6.56 * z)
+
+      if col < 320 then
+         if old_col >= 320 then {
+            color := get(colorlist)
+            put(colorlist, color)
+            }
+      else if col > 320 then
+         if old_col <= 320 then {
+            color := get(colorlist)
+            put(colorlist, color)
+            }
+
+      Fg(color)
+      DrawLine(old_col, old_row, old_col,col, row, col)
+      old_row := row
+      old_col := col
+ 
+      }
+
+   Event()
+
+end
+
+
+link numbers
+link wopen
+
+procedure mainlor(vqx,vqy,vqz,zxx,zxy,zxz,jmc)
+   local col, color, colorlist, cx, cy, cz, d0_x, d0_y, d0_z, d1_x
+   local d1_y, d1_z, d2_x, d2_y, d2_z, d3_x, d3_y, d3_z, dt, dt2
+   local i, old_col, old_row, old_y, row, sx, sy, sz, x, x_angle
+   local xt, y, y_angle, yt, z, z_angle, zt
+
+   #val control list
+   (qxx := vqx, qxy := vqy, qxz := vqz, kxx := zxx, kxy := zxy, kxz := zxz, kmc := jmc) 
+
+   x_angle  :=  rtod(qxx) #rtod(45)
+   sx  :=  sin(x_angle)
+   cx  :=  cos(x_angle)
+   y_angle  :=  rtod(qxy) #rtod(0)
+   sy  :=  sin(y_angle)
+   cy  :=  cos(y_angle)
+   z_angle  :=  rtod(qxz) #rtod(90)
+   sz  :=  sin(z_angle)
+   cz  :=  cos(z_angle)
+
+   colorlist := ["red", "yellow", "red", "magenta", "cyan", "yellow"]
+
+   color := colorlist[1]
+
+   x  :=  kxx  #0.0
+   y  :=  kxy  #1.0
+   z  :=  kxz  #0.0
+   old_col  :=  round(y * 9 + 320)
+   old_row  :=  round(350 - 6.56 * z)
+   dt  :=  0.01
+   dt2  :=  dt / 2
+   every i := 0 to kmc do {        #8000
+      d0_x  :=  10 * (y-x) * dt2
+      d0_y  :=  (-x * z + 28 * x - y) * dt2
+      d0_z   :=  (x * y - 8 * z / 3) * dt2
+      xt  :=  x + d0_x
+      yt  :=  y + d0_y
+      zt  :=  z + d0_z
+      d1_x  :=  (10 * (yt-xt)) * dt2
+      d1_y  :=  (-xt * zt + 28 * xt - yt) * dt2
+      d1_z   := (xt * yt - 8 * zt / 3) * dt2
+      xt  :=  x + d1_x
+      yt  :=  y + d1_y
+      zt  :=  z + d1_z
+      d2_x  :=  (10 * (yt-xt)) * dt
+      d2_y  :=  (-xt * zt + 28 * xt - yt) * dt
+      d2_z   := (xt * yt - 8 * zt / 3) * dt
+      xt  :=  x + d2_x
+      yt  :=  y + d2_y
+      zt  :=  z + d2_z
+      d3_x  :=  (10 * (yt - xt)) * dt2
+      d3_y  :=  (-xt * zt + 28 * xt - yt) * dt2
+      d3_z  :=  (xt * yt - 8 * zt / 3) * dt2
+                     old_y  :=  y
+      x  :=  x + (d0_x + d1_x + d1_x + d2_x + d3_x) * 0.333333333
+      y  :=  y + (d0_y + d1_y + d1_y + d2_y + d3_y) * 0.333333333
+      z  :=  z +  (d0_z + d1_z + d1_z + d2_z + d3_z) * 0.333333333
+
+      col  :=  round(y * 9 + 320)
+      row  :=  round(350 - 6.56 * z)
+
+      if col < 320 then
+         if old_col >= 320 then {
+            color := get(colorlist)
+            put(colorlist, color)
+            }
+      else if col > 320 then
+         if old_col <= 320 then {
+            color := get(colorlist)
+            put(colorlist, color)
+            }
+
+      Fg(color)
+     #DrawLine(old_col, old_row,25,col, row,30)
+      DrawPoint(old_col, old_row,25,col, row,30)
+      old_row := row
+      old_col := col
+ 
+      }
+
+   Event()
+
+end
+
+link wopen
+
+procedure mainsier()
+   local extent, x, y, i
+
+Fg("red")
+
+   extent := 300
+
+   WOpen("label=sier", "height=" || extent, "width=" || extent) |
+      stop("*** cannot open window")
+
+   x := 20			# The results do not depend on these values
+   y := 150
+
+   every i := 1 to 1500 do {
+      case ?3 of {		# Decide what to do at random
+         1: {
+            x /:= 2
+            y /:= 2
+            }
+         2: {
+            x /:= 2
+            y := (extent + y) / 2
+            }
+         3: {
+            x := (extent + x) / 2
+            y := (extent + y) / 2
+            }
+         }
+      if i > 1000 then DrawPoint(x, y, 20)		# Wait until attraction
+      }
+
+   Event()
+
+end
+
+link interact
+link options
+link wopen
+
+
+
+procedure spokes1()
+   local incr, j
+
+(x := 100, y := 100, r := 100, i := 500, angle := 8)
+
+Fg("red")
+
+   incr := 2 * &pi / i 
+
+   every j := 1 to i do {
+      #DrawLine(x, y, x + r * cos(angle), y + r * sin(angle))
+      DrawPoint(x, y, x + r * cos(angle),20, y + r * sin(angle),20)
+      angle +:= incr
+      }
+
+   return
+
+end
+
+procedure spokes2()
+
+local theta, incr, points
+
+(cx := 50, cy := 25, radius := 100, n := 30)
+
+Fg("red")
+
+theta := 0
+
+incr := 2 * &pi / n
+
+points := []
+
+every 1 to n do {
+put(points, cx, cy)
+put(points, cx + radius * cos(theta), cy + radius * sin(theta),cx + radius * cos(theta))
+theta +:= incr
+}
+
+#DrawPoint ! points
+DrawSegment ! points
+return
+end
+
+link graphics,printf
+ 
+$define EDGE  0
+$define EMPTY 1
+$define TREE  2
+$define FIRE  3
+ 
+global Colours,Width,Height,ProbTree,ProbFire,ProbInitialTree,Forest,oldForest
+ 
+procedure mainfire()             # forest fire
+ 
+    Height := 20            # Window height 
+    Width := 20             # Window width
+    ProbInitialTree := .10   # intial probability of trees
+    ProbTree := .01          # ongoing probability of trees
+    ProbFire := ProbTree/50. # probability of fire
+    Rounds := 1            # rounds to evolve
+ 
+    setup_forest()
+    every 1 to Rounds do {
+       show_forest()
+       evolve_forest()
+       }
+    printf("Forest fire %d x %d rounds=%d p.initial=%r p/f=%r/%r fps=%r\n",
+           Width,Height,Rounds,ProbInitialTree,ProbTree,ProbFire,
+           Rounds/(&time/1000.))  # stats
+    WDone()
+end   
+ 
+procedure setup_forest()     #: setup the forest
+ 
+    Colours := table()       # define colours
+    Colours[EDGE]  := "black"
+    Colours[EMPTY] := "grey"
+    Colours[TREE]  := "green"
+    Colours[FIRE]  := "red"
+ 
+    WOpen("label=Forest Fire", "bg=black",
+          "size=" || Width+2 || "," || Height+2) | # add for border
+             stop("Unable to open Window")
+    every !(Forest := list(Height)) := list(Width,EMPTY)  # default
+    every ( Forest[1,1 to Width]  | Forest[Height,1 to Width] | 
+            Forest[1 to Height,1] | Forest[1 to Height,Width] ) := EDGE
+    every r := 2 to Height-1 & c := 2 to Width-1 do 
+       if probability(ProbInitialTree) then Forest[r,c] := TREE
+end
+ 
+procedure show_forest()      #: show Forest - drawn changes only
+   every r := 2 to *Forest-1 & c := 2 to *Forest[r]-1 do
+      if /oldForest | oldForest[r,c] ~= Forest[r,c] then {
+         WAttrib("fg=" || Colours[Forest[r,c]]) 
+         DrawPoint(r,c,20)
+      }
+return()
+end
+ 
+procedure evolve_forest()    #: evolve forest
+    old := oldForest := list(*Forest)     # freeze copy 
+    every old[i := 1 to *Forest] := copy(Forest[i])  # deep copy
+ 
+    every r := 2 to *Forest-1 & c := 2 to *Forest[r]-1 do 
+       Forest[r,c] := case old[r,c] of {   # apply rules 
+          FIRE : EMPTY
+          TREE : if probability(ProbFire) | 
+                  ( old[r-1, c-1 to c+1] | 
+                    old[r,c-1|c+1] | 
+                    old[r+1,c-1 to c+1] ) = FIRE then FIRE
+          EMPTY: if probability(ProbTree) then TREE
+          }      
+end
+ 
+procedure probability(P)     #: succeed with probability P
+if ?0 <= P then return
+end
+
+
+
+#OLD TYPE INPUT NUMERICAL
+
+
+
+
+
+
+procedure texplane022(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+
+(aax := at[10],bbx := at[11],ccx := at[12])
+(ddx := at[13],eex := at[14],ffx := at[15])
+(ggx := at[16],hhx := at[17],iix := at[18])
+
+(aaax := at[19],bbbx := at[20],cccx := at[21])
+(dddx := at[22],eeex := at[23],fffx := at[24])
+(gggx := at[25],hhhx := at[26],iiix := at[27])
+
+(aaaax := at[28],bbbbx := at[29],ccccx := at[30])
+(ddddx := at[31],eeeex := at[32],ffffx := at[33])
+(ggggx := at[34],hhhhx := at[35],iiiix := at[36])
+
+(jq := at[37])
+
+px := (ax||bx||cx) 
+py := (dx||ex||fx) 
+pz := (gx||hx||ix)
+
+pxx := (aax||bbx||ccx) 
+pyy := (ddx||eex||ffx) 
+pzz := (ggx||hhx||iix)
+
+pxxx := (aaax||bbbx||cccx) 
+pyyy := (dddx||eeex||fffx) 
+pzzz := (gggx||hhhx||iiix)
+
+pxxxx := (aaaax||bbbbx||ccccx) 
+pyyyy := (ddddx||eeeex||ffffx) 
+pzzzz := (ggggx||hhhhx||iiiix)
+
+c := jq
+
+inptexpln2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,c)
+
+end
+
+####################################################
+
+procedure
+inptexpln2(px,py,pz,pxx,pyy,pzz,pxxx,pyyy,pzzz,pxxxx,pyyyy,pzzzz,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png","texcoord=0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0")
+
+#FillPolygon(0+px,1+py,0+pz,1+pxx,1+pyy,0+pzz,1+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+FillPolygon(0+px,0+py,0+pz,0+pxx,0+pyy,0+pzz,0+pxxx,0+pyyy,0+pzzz,0+pxxxx,0+pyyyy,0+pzzzz)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+############################################################
+
+#not yet used
+
+procedure texeditcube01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+
+(jx := at[10],jq := at[11])
+
+x := (ax||bx||cx) 
+y := (dx||ex||fx) 
+z := (gx||hx||ix) 
+s := jx
+t := jq
+
+inpgltexcube01(x,y,z,s,t)
+
+return()
+
+end
+
+################################################
+
+procedure inpgltexcube01(x,y,z,r,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+   
+DrawCube(x,y,z,r)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+################################################
+
+procedure rantexsphere01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(s := at[10],t := at[11])
+
+#c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpgltexsphere02(?x,?y,?z,?s,t)
+
+}
+}
+}
+
+return()
+
+end
+
+################################################
+
+procedure rantexeditcube01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(s := at[10],t := at[11])
+
+#c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpgltexcube01(?x,?y,?z,?s,t)
+
+}
+}
+}
+
+return()
+
+end
+
+###################################################
+
+procedure inpgltexsphere02(x,y,z,r,tex)
+
+WAttrib("texmode=on")
+
+WAttrib("texture="||(tex)||".png")
+
+#PushMatrix()
+
+#Rotate(-5.0,1.0,0,0)
+   
+DrawSphere(x,y,z,r)
+
+WAttrib("texmode=off") 
+
+return()
+
+end
+
+###################################################
+
+#tex cube multi tex facets
+#this one seems to work
+
+procedure texcubein(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+
+x := (ax||bx||cx)  
+y := (dx||ex||fx) 
+z := (gx||hx||ix) 
+
+tpcubemain01(x,y,z)
+
+end
+
+##########################################################
+
+procedure cube01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jx := at[10],jq := at[11])
+
+c := colorTable(jq)
+
+x := (ax||bx||cx) 
+y := (dx||ex||fx) 
+z := (gx||hx||ix) 
+s := jx
+
+inpglcube01(x,y,z,s,c)
+
+return()
+
+end
+
+##########################################################
+
+procedure sphere01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jx := at[10],jq := at[11])
+
+c := colorTable(jq)
+
+x := (ax||bx||cx) 
+y := (dx||ex||fx) 
+z := (gx||hx||ix) 
+s := jx
+
+WAttrib( "slices=45", "rings=45" )
+
+inpglsphere01(x,y,z,s,c)
+
+return()
+
+end
+
+##########################################################
+
+procedure cyl01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jz := at[10],jx := at[11],jy := at[12])
+(jq := at[13])
+
+c := colorTable(jq)
+
+x := (ax||bx||cx) 
+y := (dx||ex||fx) 
+z := (gx||hx||ix)
+p1 := jz 
+s1 := jx
+s2 := jy
+
+inpglcylinder01(x,y,z,p1,s1,s2,c)
+
+return()
+
+end
+
+#############################################################
+
+procedure scene01(b)
+
+(ax := b[1],bx := b[2],cx := b[3])
+(dx := b[4],ex := b[5],fx := b[6])
+(gx := b[7],hx := b[8],ix := b[9])
+(ss := b[10],jq := b[11])
+
+cc := colorTable(jq)
+
+
+   (xc := 0,yc := 0)
+
+   i := (dx||ex||fx)   #15
+
+   size := (ax||bx||cx)  #was 10
+   radius := size / .8
+   xc := yc := size / .8
+
+   angle := 0.0
+   incr := (gx||hx||ix) * &pi / i
+
+   every j := 1 to i do {
+      spokes(xc + radius * cos(angle), yc + radius * sin(angle),
+      radius, i, angle,ss,cc)
+      angle +:= incr
+      }
+ 
+end
+
+procedure spokes(x, y, r, i, angle,s,c)
+   local incr, j
+
+   incr := 2 * &pi / i 
+  Fg(c)
+   every j := 1 to i do {
+DrawSphere(x + r * cos(angle),0,y + r * sin(angle), s)
+
+      angle +:= incr
+      }
+
+   return
+
+#radii..use x,y,r
+   
+end
+
+##################################################################
+
+procedure comlist01(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpglcube01(?x,?y,?z,?.5,c)
+
+}
+}
+}
+
+return()
+
+end
+
+############################################################
+
+procedure comlist02(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpglcube01(x,y,z,.5,c)
+
+}
+}
+}
+
+return()
+
+end
+
+#################################################################
+
+procedure comlist03(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jx := at[10],jq := at[11],jz := at[12])
+
+c := colorTable(jq)
+
+every xx := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+x := (1 * sin(jz * &pi) / xx)
+
+inpglcube01(x,y,z,jx,c)
+
+}
+}
+}
+
+return()
+
+end
+
+#############sphere arrays#########################
+
+procedure comlist04(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpglsphere01(?x,?y,?z,?.5,c)
+
+}
+}
+}
+
+return()
+
+end
+
+############################################################
+
+procedure comlist05(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{
+every y := 1 to (dx||ex||fx) do{
+every z := 1 to (gx||hx||ix) do{ 
+
+inpglsphere01(x,y,z,.5,c)
+
+}
+}
+}
+
+return()
+
+end
+
+##################################################################
+
+#begin mesh
+
+procedure tmod01(tt)
+
+(xdd := tt[1],zed := tt[2])
+
+(zq1 := -5+zed,zq2 := -4.5+zed, zq3 := -4+zed)
+
+v01 := (tt[3]||"."||tt[4])
+v02 := (tt[5]||"."||tt[6])
+v03 := (tt[7]||"."||tt[8])
+v04 := (tt[9]||"."||tt[10])
+v05 := (tt[11]||"."||tt[12])
+v06 := (tt[13]||"."||tt[14])
+v07 := (tt[15]||"."||tt[16])
+v08 := (tt[17]||"."||tt[18])
+v09 := (tt[19]||"."||tt[20])
+v10 := (tt[21]||"."||tt[22])
+v11 := (tt[23]||"."||tt[24])
+v12 := (tt[25]||"."||tt[26])
+v13 := (tt[27]||"."||tt[28])
+v14 := (tt[29]||"."||tt[30])
+v15 := (tt[31]||"."||tt[32])
+
+c1 := tt[33]
+c2 := tt[34]
+c3 := tt[35] 
+c4 := tt[36]
+
+duk := colorTable(c1)
+dad := colorTable(c2)
+daq := colorTable(c3)
+daz := colorTable(c4)
+
+######################################################
+
+(ya1 := -1+v01 ,ya2 := -1+v02,ya3 := -1+v03,ya4 := -1+v04,ya5 := -1+v05,ya6 := -1+v06,ya7 := -1+v07,ya8 := -1+v08,ya9 := -1+v09,yn1 := -1+v10,yn2 := -1+v11,yn3 := -1+v12,yn4 := -1+v13,yn5 := -1+v14,yn6 := -1+v15)
+
+######################################################
+
+(xa1 := 0+xdd,xa2 := .5+xdd,xa3 := 1+xdd,xa4 := 1.5+xdd,xa5 := 2+xdd,xa6 := 0+xdd,xa7 := .5+xdd,xa8 := 1+xdd,xa9 := 1.5+xdd,x10 := 2+xdd,x11 := 0+xdd,x12 := .5+xdd,x13 := 1+xdd,x14 := 1.5+xdd,x15 := 2+xdd)
+
+##############
+
+xq1 := xa1 
+xq2 := xa2  
+xq3 := xa3 
+ 
+xq4 := xa4  
+xq5 := xa5 
+xq6 := xa6 
+ 
+xq7 := xa7  
+xq8 := xa8  
+xq9 := xa9
+ 
+xm1 := x10  
+xm2 := x11 
+xm3 := x12 
+
+xm4 := x13 
+xm5 := x14  
+xm6 := x15
+
+##############################################
+
+yq1 := ya1 
+yq2 := ya2  
+yq3 := ya3 
+ 
+yq4 := ya4 
+yq5 := ya5 
+yq6 := ya6 
+ 
+yq7 := ya7 
+yq8 := ya8 
+yq9 := ya9 
+ 
+ym1 := yn1  
+ym2 := yn2
+ym3 := yn3 
+
+ym4 := yn4 
+ym5 := yn5  
+ym6 := yn6 
+
+######################################################
+
+Fg(duk)
+#1
+ FillPolygon(xq1,yq1,zq1,xq2,yq2,zq1,xq6,yq6,zq2)
+
+Fg(daq)
+#2  
+ FillPolygon(xq2,yq2,zq1,xq7,yq7,zq2,xq6,yq6,zq2)
+
+Fg(daz)
+#3  
+ FillPolygon(xq2,yq2,zq1,xq3,yq3,zq1,xq7,yq7,zq2)
+
+Fg(dad)
+#4  
+ FillPolygon(xq3,yq3,zq1,xq8,yq8,zq2,xq7,yq7,zq2)
+
+Fg(duk)
+#5
+ FillPolygon(xq3,yq3,zq1,xq4,yq4,zq1,xq8,yq8,zq2)
+
+Fg(daq)
+#6  
+ FillPolygon(xq4,yq4,zq1,xq9,yq9,zq2,xq8,yq8,zq2)
+
+Fg(daz)
+#7
+ FillPolygon(xq4,yq4,zq1,xq5,yq5,zq1,xq9,yq9,zq2)
+
+Fg(dad)
+#8  
+ FillPolygon(xq5,yq5,zq1,xm1,ym1,zq2,xq9,yq9,zq2)
+
+######################################################
+
+Fg(duk)
+#9  
+ FillPolygon(xq6,yq6,zq2,xq7,yq7,zq2,xm2,ym2,zq3)
+
+Fg(daq)
+#10  
+ FillPolygon(xq7,yq7,zq2,xm3,ym3,zq3,xm2,ym2,zq3)
+
+Fg(daz)
+#11
+ FillPolygon(xq7,yq7,zq2,xq8,yq8,zq2,xm3,ym3,zq3)
+
+Fg(dad)
+#12  
+ FillPolygon(xq8,yq8,zq2,xm4,ym4,zq3,xm3,ym3,zq3)
+
+Fg(duk)
+#13
+ FillPolygon(xq8,yq8,zq2,xq9,yq9,zq2,xm4,ym4,zq3)
+
+Fg(daq)
+#14  
+ FillPolygon(xq9,yq9,zq2,xm5,ym5,zq3,xm4,ym4,zq3)
+
+Fg(daz)
+#15  
+ FillPolygon(xq9,yq9,zq2,xm1,ym1,zq2,xm5,ym5,zq3)
+
+Fg(dad)
+#16  
+ FillPolygon(xm1,ym1,zq2,xm6,ym6,zq3,xm5,ym5,zq3)
+ 
+end
+
+########################################################
+#cube stuff for cad
+
+#cube array x
+############################################################
+
+procedure comlist033(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+every x := 1 to (ax||bx||cx) do{ 
+y := (dx||ex||fx) 
+z := (gx||hx||ix) 
+
+inpglcube01(x,y,z,1,c)
+
+}
+
+return()
+
+end
+
+#cube array y
+#################################################################
+
+procedure comlist044(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+x := (ax||bx||cx)
+every y :=  1 to (dx||ex||fx) do{ 
+z :=  (gx||hx||ix) 
+
+inpglcube01(x,y,z,1,c)
+
+}
+
+return()
+
+end
+
+#cube array z
+##################################################
+
+procedure comlist055(at)
+
+(ax := at[1],bx := at[2],cx := at[3])
+(dx := at[4],ex := at[5],fx := at[6])
+(gx := at[7],hx := at[8],ix := at[9])
+(jq := at[10])
+
+c := colorTable(jq)
+
+x := (ax||bx||cx)
+
+y := (dx||ex||fx) 
+every z := 1 to (gx||hx||ix) do{ 
+
+inpglcube01(x,y,z,1,c)
+
+}
+
+return()
+
+end
+
+#VOXW09 VOX DRAW#######################################
+
+##############################################################
+
+##############################################################
+
+##############################################################
+
+#begin vox draw
+
+procedure maind()
+
+system("poll.exe")
+
+end
+
+##############################################
+
+procedure mainp()
+   
+system("pme.exe")
+
+end
+
+###############################################
+ 
+procedure iscan()
+
+a := write(readlinea("input.txt",1)|"failed")
+b := write(readlinea("input.txt",2)|"failed")
+c := write(readlinea("input.txt",3)|"failed")
+d := write(readlinea("input.txt",4)|"failed")
+
+inpglcube01((a[14]||a[15]),0,(a[17]||a[18]),1,"green")
+inpglcube01((a[20]||a[21]),0,(a[23]||a[24]),1,"green")
+inpglcube01((a[26]||a[27]),0,(a[29]||a[30]),1,"green")
+inpglcube01((a[32]||a[33]),0,(a[35]||a[36]),1,"green")
+inpglcube01((a[38]||a[39]),0,(a[41]||a[42]),1,"green")
+
+inpglcube01((a[44]||a[45]),0,(a[47]||a[48]),1,"green")
+inpglcube01((a[50]||a[51]),0,(a[53]||a[54]),1,"green")
+inpglcube01((a[56]||a[57]),0,(a[59]||a[60]),1,"green")
+inpglcube01((a[62]||a[63]),0,(a[65]||a[66]),1,"green")
+inpglcube01((a[68]||a[69]),0,(a[71]||a[72]),1,"green")
+
+inpglcube01((a[74]||a[75]),0,(a[77]||a[78]),1,"green")
+inpglcube01((a[80]||a[81]),0,(a[83]||a[84]),1,"green")
+inpglcube01((a[86]||a[87]),0,(a[89]||a[90]),1,"green")
+
+inpglcube01((a[92]||a[93]),0,(a[95]||a[96]),1,"green")
+inpglcube01((a[98]||a[99]),0,(a[101]||a[102]),1,"green")
+
+inpglcube01((a[104]||a[105]),0,(a[107]||a[108]),1,"green")
+inpglcube01((a[110]||a[111]),0,(a[113]||a[114]),1,"green")
+inpglcube01((a[116]||a[117]),0,(a[119]||a[120]),1,"green")
+inpglcube01((a[122]||a[123]),0,(a[125]||a[126]),1,"green")
+inpglcube01((a[128]||a[129]),0,(a[131]||a[132]),1,"green")
+
+inpglcube01((a[134]||a[135]),0,(a[137]||a[138]),1,"green")
+inpglcube01((a[140]||a[141]),0,(a[143]||a[144]),1,"green")
+inpglcube01((a[146]||a[147]),0,(a[149]||a[150]),1,"green")
+inpglcube01((a[152]||a[153]),0,(a[155]||a[156]),1,"green")
+inpglcube01((a[158]||a[159]),0,(a[161]||a[162]),1,"green")
+
+inpglcube01((a[164]||a[165]),0,(a[167]||a[168]),1,"green")
+inpglcube01((a[170]||a[171]),0,(a[173]||a[174]),1,"green")
+inpglcube01((a[176]||a[177]),0,(a[179]||a[180]),1,"green")
+inpglcube01((a[182]||a[183]),0,(a[185]||a[186]),1,"green")
+inpglcube01((a[188]||a[189]),0,(a[191]||a[192]),1,"green")
+
+###########################################################
+
+inpglcube01((b[14]||b[15]),1,(b[17]||b[18]),1,"blue")
+inpglcube01((b[20]||b[21]),1,(b[23]||b[24]),1,"blue")
+inpglcube01((b[26]||b[27]),1,(b[29]||b[30]),1,"blue")
+inpglcube01((b[32]||b[33]),1,(b[35]||b[36]),1,"blue")
+inpglcube01((b[38]||b[39]),1,(b[41]||b[42]),1,"blue")
+
+inpglcube01((b[44]||b[45]),1,(b[47]||b[48]),1,"blue")
+inpglcube01((b[50]||b[51]),1,(b[53]||b[54]),1,"blue")
+inpglcube01((b[56]||b[57]),1,(b[59]||b[60]),1,"blue")
+inpglcube01((b[62]||b[63]),1,(b[65]||b[66]),1,"blue")
+inpglcube01((b[68]||b[69]),1,(b[71]||b[72]),1,"blue")
+
+inpglcube01((b[74]||b[75]),1,(b[77]||b[78]),1,"blue")
+inpglcube01((b[80]||b[81]),1,(b[83]||b[84]),1,"blue")
+inpglcube01((b[86]||b[87]),1,(b[89]||b[90]),1,"blue")
+inpglcube01((b[92]||b[93]),1,(b[95]||b[96]),1,"blue")
+inpglcube01((b[98]||b[99]),1,(b[101]||b[102]),1,"blue")
+
+inpglcube01((b[104]||b[105]),1,(b[107]||b[108]),1,"blue")
+inpglcube01((b[110]||b[111]),1,(b[113]||b[114]),1,"blue")
+inpglcube01((b[116]||b[117]),1,(b[119]||b[120]),1,"blue")
+inpglcube01((b[122]||b[123]),1,(b[125]||b[126]),1,"blue")
+inpglcube01((b[128]||b[129]),1,(b[131]||b[132]),1,"blue")
+
+inpglcube01((b[134]||b[135]),1,(b[137]||b[138]),1,"blue")
+inpglcube01((b[140]||b[141]),1,(b[143]||b[144]),1,"blue")
+inpglcube01((b[146]||b[147]),1,(b[149]||b[150]),1,"blue")
+inpglcube01((b[152]||b[153]),1,(b[155]||b[156]),1,"blue")
+inpglcube01((b[158]||b[159]),1,(b[161]||b[162]),1,"blue")
+
+inpglcube01((b[164]||b[165]),1,(b[167]||b[168]),1,"blue")
+inpglcube01((b[170]||b[171]),1,(b[173]||b[174]),1,"blue")
+inpglcube01((b[176]||b[177]),1,(b[179]||b[180]),1,"blue")
+inpglcube01((b[182]||b[183]),1,(b[185]||b[186]),1,"blue")
+inpglcube01((b[188]||b[189]),1,(b[191]||b[192]),1,"blue")
+
+############################################################
+
+inpglcube01((c[14]||c[15]),2,(c[17]||c[18]),1,"red")
+inpglcube01((c[20]||c[21]),2,(c[23]||c[24]),1,"red")
+inpglcube01((c[26]||c[27]),2,(c[29]||c[30]),1,"red")
+inpglcube01((c[32]||c[33]),2,(c[35]||c[36]),1,"red")
+inpglcube01((c[38]||c[39]),2,(c[41]||c[42]),1,"red")
+
+inpglcube01((c[44]||c[45]),2,(c[47]||c[48]),1,"red")
+inpglcube01((c[50]||c[51]),2,(c[53]||c[54]),1,"red")
+inpglcube01((c[56]||c[57]),2,(c[59]||c[60]),1,"red")
+inpglcube01((c[62]||c[63]),2,(c[65]||c[66]),1,"red")
+inpglcube01((c[68]||c[69]),2,(c[71]||c[72]),1,"red")
+
+inpglcube01((c[74]||c[75]),2,(c[77]||c[78]),1,"red")
+inpglcube01((c[80]||c[81]),2,(c[83]||c[84]),1,"red")
+inpglcube01((c[86]||c[87]),2,(c[89]||c[90]),1,"red")
+inpglcube01((c[92]||c[93]),2,(c[95]||c[96]),1,"red")
+inpglcube01((c[98]||c[99]),2,(c[101]||c[102]),1,"red")
+
+inpglcube01((c[104]||c[105]),2,(c[107]||c[108]),1,"red")
+inpglcube01((c[110]||c[111]),2,(c[113]||c[114]),1,"red")
+inpglcube01((c[116]||c[117]),2,(c[119]||c[120]),1,"red")
+inpglcube01((c[122]||c[123]),2,(c[125]||c[126]),1,"red")
+inpglcube01((c[128]||c[129]),2,(c[131]||c[132]),1,"red")
+
+inpglcube01((c[134]||c[135]),2,(c[137]||c[138]),1,"red")
+inpglcube01((c[140]||c[141]),2,(c[143]||c[144]),1,"red")
+inpglcube01((c[146]||c[147]),2,(c[149]||c[150]),1,"red")
+inpglcube01((c[152]||c[153]),2,(c[155]||c[156]),1,"red")
+inpglcube01((c[158]||c[159]),2,(c[161]||c[162]),1,"red")
+
+inpglcube01((c[164]||c[165]),2,(c[167]||c[168]),1,"red")
+inpglcube01((c[170]||c[171]),2,(c[173]||c[174]),1,"red")
+inpglcube01((c[176]||c[177]),2,(c[179]||c[180]),1,"red")
+inpglcube01((c[182]||c[183]),2,(c[185]||c[186]),1,"red")
+inpglcube01((c[188]||c[189]),2,(c[191]||c[192]),1,"red")
+return()
+
+end
+
+###############################################
+
+procedure readlinea(f,n)                        
+f := open(\f,"r") | fail                        
+every  i := n & line := |read(f) \ n do i -:= 1 
+close(f)
+if i = 0 then return line
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

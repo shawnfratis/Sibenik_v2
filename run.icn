@@ -1,0 +1,32 @@
+#RUN PROG - KINDA LIKE MAKE
+
+#stuff for win + linus
+
+#win
+
+#procedure main()
+
+#system("cd C:\icon\bu5\whatever")
+
+#system("unicon -c uw.icn voxw.icn w.icn s.icn tpin.icn 8e1.icn")
+
+#system("unicon -o prog uw.u voxw.u w.u s.u tpin.u 8e1.u")
+
+#system("prog")
+
+#end
+
+#linus
+
+procedure main()
+
+#system("cd /home/shawn/unicon/bin") #need?
+
+system("./unicon -c uw.icn voxw.icn w.icn s.icn tpin.icn 8e1.icn")
+
+system("./unicon -o prog uw.u voxw.u w.u s.u tpin.u 8e1.u")
+
+system("./prog")
+
+end
+
